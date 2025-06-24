@@ -37,6 +37,10 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             ListTile(
+              leading: Icon(Icons.person),
+              title: Text('Profile'),
+            ),
+            ListTile(
               leading: Icon(Icons.favorite),
               title: Text('Favorite'),
             ),
@@ -74,11 +78,24 @@ class _HomePageState extends State<HomePage> {
                   children: [
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: Text(
-                        genre.genre,
-                        style: const TextStyle(
-                          fontSize: 18, fontWeight: FontWeight.bold,
-                        ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            genre.genre,
+                            style: const TextStyle(
+                              fontSize: 18, 
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Text(
+                            '${genre.count} buku',
+                            style: const TextStyle(
+                              fontSize: 14,
+                              color: Colors.grey,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                     const SizedBox(height: 8),
@@ -101,7 +118,7 @@ class _HomePageState extends State<HomePage> {
                             .toList();
 
                         return SizedBox(
-                          height: 300,
+                          height: 320,
                           child: ListView.builder(
                             scrollDirection: Axis.horizontal,
                             itemCount: books.length,
