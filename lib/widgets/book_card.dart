@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../models/book.dart';
+import '../models/book_models.dart';
 
 class BookCard extends StatelessWidget {
   final Book book;
@@ -18,15 +18,17 @@ class BookCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           SizedBox(
-            height: 150,
+            height: 200,
             child: ClipRRect(
               borderRadius: BorderRadius.circular(12),
               child: Image.network(
-                book.coverImage,
+                book.coverImage.isNotEmpty
+                    ? book.coverImage
+                    : 'https://via.placeholder.com/150',
                 fit: BoxFit.cover,
-                width: double.infinity,
-                errorBuilder: (context, error, stackTrace) =>
-                    const Icon(Icons.broken_image),
+                errorBuilder: (context, error, stackTrace) {
+                  return const Icon(Icons.broken_image, size: 48);
+                },
               ),
             ),
           ),
@@ -37,7 +39,7 @@ class BookCard extends StatelessWidget {
               book.title,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
-              textAlign: TextAlign.center,
+              textAlign: TextAlign.left,
             ),
           ),
           const SizedBox(height: 8),
