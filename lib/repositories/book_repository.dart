@@ -1,5 +1,5 @@
-import '../models/book.dart';
-import '../services/book_api_service.dart';
+import '../models/book_models.dart';
+import '../services/book_api_services.dart';
 
 class BookRepository {
   Future<List<Book>> getAllBooks() async {
