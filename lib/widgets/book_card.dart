@@ -1,10 +1,18 @@
 import 'package:flutter/material.dart';
 import '../models/book_models.dart';
 
-class BookCard extends StatelessWidget {
+class BookCard extends StatefulWidget {
   final Book book;
 
   const BookCard({super.key, required this.book});
+
+  @override
+  State<BookCard> createState() => _BookCardState();
+}
+
+class _BookCardState extends State<BookCard> {
+  bool isFavorited = false;
+  bool isSaved = false;
 
   @override
   Widget build(BuildContext context) {
@@ -14,75 +22,88 @@ class BookCard extends StatelessWidget {
         color: Colors.grey[200],
         borderRadius: BorderRadius.circular(12),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Stack(
         children: [
-          // Gambar buku
-          SizedBox(
-            height: 180,
-            width: double.infinity,
-            child: ClipRRect(
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
-              child: Image.network(
-                book.coverImage.isNotEmpty
-                    ? book.coverImage
-                    : 'https://via.placeholder.com/150',
-                fit: BoxFit.cover,
-              ),
-            ),
-          ),
-          const SizedBox(height: 8),
-
-          // Judul dan tombol aksi
+          // Konten utama
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: Row(
+            padding: const EdgeInsets.all(8),
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Judul dan author
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        book.title,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        book.author,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(fontSize: 12, color: Colors.black54),
-                      ),
-                    ],
+                // Gambar buku
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: Image.network(
+                    widget.book.coverImage,
+                    fit: BoxFit.cover,
+                    height: 170,
+                    width: double.infinity,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Image.network(
+                        'https://via.placeholder.com/150',
+                        fit: BoxFit.cover,
+                        height: 170,
+                        width: double.infinity,
+                      );
+                    },
                   ),
                 ),
+                const SizedBox(height: 8),
 
-                // Tombol Favorite dan Save
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    IconButton(
-                      icon: const Icon(Icons.favorite_border),
-                      onPressed: () {
-                        // Tambahkan logika favorite
-                      },
-                    ),
-                    IconButton(
-                      icon: const Icon(Icons.bookmark_border),
-                      onPressed: () {
-                        // Tambahkan logika save
-                      },
-                    ),
-                  ],
+                // Judul
+                Text(
+                  widget.book.title,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 4),
+
+                // Author
+                Text(
+                  widget.book.author,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(fontSize: 12, color: Colors.black54),
+                ),
+
+                const SizedBox(height: 40), // ruang untuk tombol
+              ],
+            ),
+          ),
+
+          // Tombol aksi di kanan bawah
+          Positioned(
+            bottom: 8,
+            right: 8,
+            child: Row(
+              children: [
+                IconButton(
+                  icon: Icon(
+                    isFavorited ? Icons.favorite : Icons.favorite_border,
+                    color: isFavorited ? Colors.red : Colors.grey,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      isFavorited = !isFavorited;
+                    });
+                  },
+                ),
+                const SizedBox(width: 8),
+                IconButton(
+                  icon: Icon(
+                    isSaved ? Icons.bookmark : Icons.bookmark_border,
+                    color: isSaved ? Colors.amber : Colors.grey,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      isSaved = !isSaved;
+                    });
+                  },
                 ),
               ],
             ),
           ),
-          const SizedBox(height: 8),
         ],
       ),
     );
