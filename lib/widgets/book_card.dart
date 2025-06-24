@@ -15,31 +15,71 @@ class BookCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Gambar buku
           SizedBox(
-            height: 200,
+            height: 180,
+            width: double.infinity,
             child: ClipRRect(
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
               child: Image.network(
                 book.coverImage.isNotEmpty
                     ? book.coverImage
                     : 'https://via.placeholder.com/150',
                 fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) {
-                  return const Icon(Icons.broken_image, size: 48);
-                },
               ),
             ),
           ),
           const SizedBox(height: 8),
+
+          // Judul dan tombol aksi
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 4),
-            child: Text(
-              book.title,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-              textAlign: TextAlign.left,
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Judul dan author
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        book.title,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        book.author,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(fontSize: 12, color: Colors.black54),
+                      ),
+                    ],
+                  ),
+                ),
+
+                // Tombol Favorite dan Save
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.favorite_border),
+                      onPressed: () {
+                        // Tambahkan logika favorite
+                      },
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.bookmark_border),
+                      onPressed: () {
+                        // Tambahkan logika save
+                      },
+                    ),
+                  ],
+                ),
+              ],
             ),
           ),
           const SizedBox(height: 8),
