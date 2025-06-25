@@ -30,7 +30,7 @@ class _BookCardState extends State<BookCard> {
       child: Container(
         margin: const EdgeInsets.all(8),
         decoration: BoxDecoration(
-          color: Colors.grey[200],
+          color: Colors.grey[100],
           borderRadius: BorderRadius.circular(12),
         ),
         child: Stack(
