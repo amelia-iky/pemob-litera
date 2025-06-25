@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../models/book_models.dart';
 import '../models/genre_models.dart';
 import '../services/genre_api_services.dart';
-import '../services/book_api_services.dart'; 
+import '../services/book_api_services.dart';
 import '../widgets/book_card.dart';
 
 class HomePage extends StatefulWidget {
@@ -15,10 +15,13 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   late Future<List<GenreStat>> _genreFuture;
   final Map<String, Future<List<Book>>> _bookFutures = {};
-
   final TextEditingController _searchController = TextEditingController();
   Future<List<Book>>? _searchResults;
   bool _isSearching = false;
+
+  // Pagination
+  int currentPage = 0;
+  final int genresPerPage = 5;
 
   @override
   void initState() {
@@ -44,7 +47,15 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Litera')),
+      appBar: AppBar(
+        title: const Text('Litera',
+          style: TextStyle(
+          color: Colors.black,
+          fontSize: 24,
+          ),
+        ),
+        backgroundColor: const Color(0xFFFFC0CB),
+      ),
       drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
@@ -138,80 +149,139 @@ class _HomePageState extends State<HomePage> {
                       }
 
                       final genres = genreSnapshot.data!;
-                      return ListView.builder(
-                        itemCount: genres.length,
-                        itemBuilder: (context, index) {
-                          final genre = genres[index];
-                          _bookFutures.putIfAbsent(
-                            genre.genre,
-                            () => GenreApiService.fetchBooksByGenre(genre.genre),
-                          );
+                      final totalPages = (genres.length / genresPerPage).ceil();
+                      final pagedGenres = genres
+                          .skip(currentPage * genresPerPage)
+                          .take(genresPerPage)
+                          .toList();
 
-                          return Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 8),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
+                      return Column(
+                        children: [
+                          Expanded(
+                            child: FutureBuilder<List<GenreStat>>(
+                              future: _genreFuture,
+                              builder: (context, genreSnapshot) {
+                                if (genreSnapshot.connectionState == ConnectionState.waiting) {
+                                  return const Center(child: CircularProgressIndicator());
+                                } else if (genreSnapshot.hasError) {
+                                  return Center(child: Text('Error: ${genreSnapshot.error}'));
+                                } else if (!genreSnapshot.hasData || genreSnapshot.data!.isEmpty) {
+                                  return const Center(child: Text('No genres found.'));
+                                }
+
+                                final genres = genreSnapshot.data!;
+                                final totalPages = (genres.length / genresPerPage).ceil();
+                                final pagedGenres = genres
+                                    .skip(currentPage * genresPerPage)
+                                    .take(genresPerPage)
+                                    .toList();
+
+                                return ListView.builder(
+                                  itemCount: pagedGenres.length + 1,
+                                  itemBuilder: (context, index) {
+                                    if (index < pagedGenres.length) {
+                                      final genre = pagedGenres[index];
+                                      _bookFutures.putIfAbsent(
                                         genre.genre,
-                                        style: const TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold,
+                                        () => GenreApiService.fetchBooksByGenre(genre.genre),
+                                      );
+
+                                      return Padding(
+                                        padding: const EdgeInsets.symmetric(vertical: 8),
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Padding(
+                                              padding: const EdgeInsets.symmetric(horizontal: 16),
+                                              child: Column(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    genre.genre,
+                                                    style: const TextStyle(
+                                                      fontSize: 18,
+                                                      fontWeight: FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                  Text(
+                                                    '${genre.count} buku',
+                                                    style: const TextStyle(
+                                                      fontSize: 14,
+                                                      color: Colors.grey,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            const SizedBox(height: 8),
+                                            FutureBuilder<List<Book>>(
+                                              future: _bookFutures[genre.genre],
+                                              builder: (context, bookSnapshot) {
+                                                if (bookSnapshot.connectionState ==
+                                                    ConnectionState.waiting) {
+                                                  return const Center(child: CircularProgressIndicator());
+                                                } else if (bookSnapshot.hasError) {
+                                                  return Center(child: Text('Error loading books'));
+                                                } else if (!bookSnapshot.hasData ||
+                                                    bookSnapshot.data!.isEmpty) {
+                                                  return const Padding(
+                                                    padding: EdgeInsets.symmetric(horizontal: 16),
+                                                    child: Text('No books in this genre.'),
+                                                  );
+                                                }
+
+                                                final books = bookSnapshot.data!
+                                                    .where((b) => b.coverImage.isNotEmpty)
+                                                    .toList();
+
+                                                return SizedBox(
+                                                  height: 320,
+                                                  child: ListView.builder(
+                                                    scrollDirection: Axis.horizontal,
+                                                    itemCount: books.length,
+                                                    itemBuilder: (context, i) {
+                                                      return SizedBox(
+                                                        width: MediaQuery.of(context).size.width / 2,
+                                                        child: BookCard(book: books[i]),
+                                                      );
+                                                    },
+                                                  ),
+                                                );
+                                              },
+                                            ),
+                                          ],
                                         ),
-                                      ),
-                                      Text(
-                                        '${genre.count} buku',
-                                        style: const TextStyle(
-                                          fontSize: 14,
-                                          color: Colors.grey,
+                                      );
+                                    } else {
+                                      // Pagination sebagai item terakhir
+                                      return Padding(
+                                        padding: const EdgeInsets.symmetric(vertical: 16),
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                            IconButton(
+                                              icon: const Icon(Icons.arrow_back),
+                                              onPressed: currentPage > 0
+                                                  ? () => setState(() => currentPage--)
+                                                  : null,
+                                            ),
+                                            Text('Page ${currentPage + 1} of $totalPages'),
+                                            IconButton(
+                                              icon: const Icon(Icons.arrow_forward),
+                                              onPressed: currentPage < totalPages - 1
+                                                  ? () => setState(() => currentPage++)
+                                                  : null,
+                                            ),
+                                          ],
                                         ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                const SizedBox(height: 8),
-                                FutureBuilder<List<Book>>(
-                                  future: _bookFutures[genre.genre],
-                                  builder: (context, bookSnapshot) {
-                                    if (bookSnapshot.connectionState == ConnectionState.waiting) {
-                                      return const Center(child: CircularProgressIndicator());
-                                    } else if (bookSnapshot.hasError) {
-                                      return Center(child: Text('Error loading books'));
-                                    } else if (!bookSnapshot.hasData || bookSnapshot.data!.isEmpty) {
-                                      return const Padding(
-                                        padding: EdgeInsets.symmetric(horizontal: 16),
-                                        child: Text('No books in this genre.'),
                                       );
                                     }
-
-                                    final books = bookSnapshot.data!
-                                        .where((b) => b.coverImage.isNotEmpty)
-                                        .toList();
-
-                                    return SizedBox(
-                                      height: 320,
-                                      child: ListView.builder(
-                                        scrollDirection: Axis.horizontal,
-                                        itemCount: books.length,
-                                        itemBuilder: (context, i) {
-                                          return SizedBox(
-                                            width: MediaQuery.of(context).size.width / 2,
-                                            child: BookCard(book: books[i]),
-                                          );
-                                        },
-                                      ),
-                                    );
                                   },
-                                ),
-                              ],
+                                );
+                              },
                             ),
-                          );
-                        },
+                          ),
+                        ],
                       );
                     },
                   ),
