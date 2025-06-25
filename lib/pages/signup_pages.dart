@@ -95,8 +95,9 @@ class _RegisterPageState extends State<SignupPage> {
                       borderRadius: BorderRadius.all(Radius.circular(20)),
                     ),
                   ),
-                  validator: (value) =>
-                      value == null || value.isEmpty ? 'Masukkan nama' : null,
+                  validator: (value) => value == null || value.isEmpty
+                      ? 'Please enter your name'
+                      : null,
                 ),
                 const SizedBox(height: 20),
 
@@ -111,7 +112,7 @@ class _RegisterPageState extends State<SignupPage> {
                     ),
                   ),
                   validator: (value) => value == null || value.isEmpty
-                      ? 'Masukkan username'
+                      ? 'Please enter a username'
                       : null,
                 ),
                 const SizedBox(height: 20),
@@ -127,7 +128,7 @@ class _RegisterPageState extends State<SignupPage> {
                     ),
                   ),
                   validator: (value) => value == null || !value.contains('@')
-                      ? 'Masukkan email yang valid'
+                      ? 'Please enter a valid email'
                       : null,
                 ),
                 const SizedBox(height: 20),
@@ -154,7 +155,7 @@ class _RegisterPageState extends State<SignupPage> {
                     ),
                   ),
                   validator: (value) => value == null || value.length < 6
-                      ? 'Minimal 6 karakter'
+                      ? 'Password must be at least 6 characters'
                       : null,
                 ),
                 const SizedBox(height: 30),
