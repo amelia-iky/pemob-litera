@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import './profile_pages.dart';
 import '../models/book_models.dart';
 import '../models/genre_models.dart';
 import '../models/user_models.dart';
@@ -6,6 +7,7 @@ import '../services/book_api_services.dart';
 import '../services/genre_api_services.dart';
 import '../services/user_api_services.dart';
 import '../widgets/book_card.dart';
+
 
 
 class HomePage extends StatefulWidget {
@@ -111,7 +113,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                       Text(
                         user.email,
-                        style: const TextStyle(color: Colors.white70, fontSize: 14),
+                        style: const TextStyle(color: Colors.white, fontSize: 14),
                         overflow: TextOverflow.ellipsis,
                       ),
                     ],
@@ -122,10 +124,17 @@ class _HomePageState extends State<HomePage> {
             Expanded(
               child: ListView(
                 padding: EdgeInsets.zero,
-                children: const [
+                children: [
                   ListTile(
                     leading: Icon(Icons.person),
                     title: Text('Profile'),
+                    onTap: () {
+                      Navigator.pop(context);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const ProfilePage()),
+                      );
+                    },
                   ),
                   ListTile(
                     leading: Icon(Icons.favorite),
