@@ -18,4 +18,17 @@ class BookApiService {
       throw Exception('Failed to search books');
     }
   }
+
+  static Future<Book> fetchBookById(String id) async {
+    final response = await http.get(
+      Uri.parse('https://bukuacak-9bdcb4ef2605.herokuapp.com/api/v1/book?_id=$id'),
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      return Book.fromJson(data);
+    } else {
+      throw Exception('Gagal memuat detail buku');
+    }
+  }
 }
