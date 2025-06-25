@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
-import 'pages/login_pages.dart';
+import 'pages/signin_pages.dart';
 import 'pages/home_pages.dart';
 
 void main() {
@@ -89,6 +89,6 @@ class _SessionCheckerState extends State<SessionChecker> {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
-    return _isLoggedIn ? const HomePage() : const LoginPage();
+    return _isLoggedIn ? const HomePage() : const SigninPage();
   }
 }
