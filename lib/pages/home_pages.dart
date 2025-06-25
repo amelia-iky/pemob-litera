@@ -55,11 +55,12 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: const Text('Litera',
+        title: const Text(
+          'Litera',
           style: TextStyle(
             color: Colors.black,
             fontSize: 24,
-            fontWeight: FontWeight.bold
+            fontWeight: FontWeight.bold,
           ),
         ),
         backgroundColor: const Color(0xfff8c9d3),
@@ -75,9 +76,7 @@ class _HomePageState extends State<HomePage> {
                     height: 200,
                     width: double.infinity,
                     child: DrawerHeader(
-                      decoration: BoxDecoration(
-                        color: Color(0xfff8c9d3),
-                      ),
+                      decoration: BoxDecoration(color: Color(0xfff8c9d3)),
                       margin: EdgeInsets.zero,
                       padding: EdgeInsets.zero,
                       child: Center(
@@ -104,50 +103,57 @@ class _HomePageState extends State<HomePage> {
                 }
 
                 final user = snapshot.data!;
-                final imageUrl =
-                    user.profileImages.isNotEmpty ? user.profileImages.first.url : null;
+                final imageUrl = user.profileImages.isNotEmpty
+                    ? user.profileImages.first.url
+                    : null;
 
                 return SizedBox(
                   height: 200,
                   width: double.infinity,
                   child: DrawerHeader(
-                  decoration: const BoxDecoration(color: Color(0xfff8c9d3)),
-                  margin: EdgeInsets.zero,
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      CircleAvatar(
-                        radius: 35,
-                        backgroundColor: Colors.white,
-                        backgroundImage: imageUrl != null ? NetworkImage(imageUrl) : null,
-                        child: imageUrl == null
-                            ? const Icon(Icons.person, size: 50, color: Colors.grey)
-                            : null,
-                      ),
-                      const SizedBox(height: 12),
-                      Text(
-                        user.name,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
+                    decoration: const BoxDecoration(color: Color(0xfff8c9d3)),
+                    margin: EdgeInsets.zero,
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        CircleAvatar(
+                          radius: 35,
+                          backgroundColor: Colors.white,
+                          backgroundImage: imageUrl != null
+                              ? NetworkImage(imageUrl)
+                              : null,
+                          child: imageUrl == null
+                              ? const Icon(
+                                  Icons.person,
+                                  size: 50,
+                                  color: Colors.grey,
+                                )
+                              : null,
                         ),
-                      ),
-                      Text(
-                        user.email,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 14,
+                        const SizedBox(height: 12),
+                        Text(
+                          user.name,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      ),
-                    ],
+                        Text(
+                          user.email,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 14,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
                 );
               },
             ),
@@ -162,7 +168,9 @@ class _HomePageState extends State<HomePage> {
                       Navigator.pop(context);
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => const ProfilePage()),
+                        MaterialPageRoute(
+                          builder: (context) => const ProfilePage(),
+                        ),
                       );
                     },
                   ),
@@ -240,12 +248,13 @@ class _HomePageState extends State<HomePage> {
 
                       return GridView.builder(
                         padding: const EdgeInsets.all(8),
-                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          childAspectRatio: 0.6,
-                          crossAxisSpacing: 8,
-                          mainAxisSpacing: 8,
-                        ),
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2,
+                              childAspectRatio: 0.6,
+                              crossAxisSpacing: 8,
+                              mainAxisSpacing: 8,
+                            ),
                         itemCount: books.length,
                         itemBuilder: (context, i) {
                           return BookCard(book: books[i]);
@@ -256,11 +265,15 @@ class _HomePageState extends State<HomePage> {
                 : FutureBuilder<List<GenreStat>>(
                     future: _genreFuture,
                     builder: (context, genreSnapshot) {
-                      if (genreSnapshot.connectionState == ConnectionState.waiting) {
+                      if (genreSnapshot.connectionState ==
+                          ConnectionState.waiting) {
                         return const Center(child: CircularProgressIndicator());
                       } else if (genreSnapshot.hasError) {
-                        return Center(child: Text('Error: ${genreSnapshot.error}'));
-                      } else if (!genreSnapshot.hasData || genreSnapshot.data!.isEmpty) {
+                        return Center(
+                          child: Text('Error: ${genreSnapshot.error}'),
+                        );
+                      } else if (!genreSnapshot.hasData ||
+                          genreSnapshot.data!.isEmpty) {
                         return const Center(child: Text('No genres found.'));
                       }
 
@@ -277,16 +290,27 @@ class _HomePageState extends State<HomePage> {
                             child: FutureBuilder<List<GenreStat>>(
                               future: _genreFuture,
                               builder: (context, genreSnapshot) {
-                                if (genreSnapshot.connectionState == ConnectionState.waiting) {
-                                  return const Center(child: CircularProgressIndicator());
+                                if (genreSnapshot.connectionState ==
+                                    ConnectionState.waiting) {
+                                  return const Center(
+                                    child: CircularProgressIndicator(),
+                                  );
                                 } else if (genreSnapshot.hasError) {
-                                  return Center(child: Text('Error: ${genreSnapshot.error}'));
-                                } else if (!genreSnapshot.hasData || genreSnapshot.data!.isEmpty) {
-                                  return const Center(child: Text('No genres found.'));
+                                  return Center(
+                                    child: Text(
+                                      'Error: ${genreSnapshot.error}',
+                                    ),
+                                  );
+                                } else if (!genreSnapshot.hasData ||
+                                    genreSnapshot.data!.isEmpty) {
+                                  return const Center(
+                                    child: Text('No genres found.'),
+                                  );
                                 }
 
                                 final genres = genreSnapshot.data!;
-                                final totalPages = (genres.length / genresPerPage).ceil();
+                                final totalPages =
+                                    (genres.length / genresPerPage).ceil();
                                 final pagedGenres = genres
                                     .skip(currentPage * genresPerPage)
                                     .take(genresPerPage)
@@ -299,24 +323,34 @@ class _HomePageState extends State<HomePage> {
                                       final genre = pagedGenres[index];
                                       _bookFutures.putIfAbsent(
                                         genre.genre,
-                                        () => GenreApiService.fetchBooksByGenre(genre.genre),
+                                        () => GenreApiService.fetchBooksByGenre(
+                                          genre.genre,
+                                        ),
                                       );
 
                                       return Padding(
-                                        padding: const EdgeInsets.symmetric(vertical: 8),
+                                        padding: const EdgeInsets.symmetric(
+                                          vertical: 8,
+                                        ),
                                         child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
                                           children: [
                                             Padding(
-                                              padding: const EdgeInsets.symmetric(horizontal: 16),
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                    horizontal: 16,
+                                                  ),
                                               child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
                                                 children: [
                                                   Text(
                                                     genre.genre,
                                                     style: const TextStyle(
                                                       fontSize: 18,
-                                                      fontWeight: FontWeight.bold,
+                                                      fontWeight:
+                                                          FontWeight.bold,
                                                     ),
                                                   ),
                                                   Text(
@@ -333,32 +367,60 @@ class _HomePageState extends State<HomePage> {
                                             FutureBuilder<List<Book>>(
                                               future: _bookFutures[genre.genre],
                                               builder: (context, bookSnapshot) {
-                                                if (bookSnapshot.connectionState ==
+                                                if (bookSnapshot
+                                                        .connectionState ==
                                                     ConnectionState.waiting) {
-                                                  return const Center(child: CircularProgressIndicator());
-                                                } else if (bookSnapshot.hasError) {
-                                                  return Center(child: Text('Error loading books'));
-                                                } else if (!bookSnapshot.hasData ||
-                                                    bookSnapshot.data!.isEmpty) {
+                                                  return const Center(
+                                                    child:
+                                                        CircularProgressIndicator(),
+                                                  );
+                                                } else if (bookSnapshot
+                                                    .hasError) {
+                                                  return Center(
+                                                    child: Text(
+                                                      'Error loading books',
+                                                    ),
+                                                  );
+                                                } else if (!bookSnapshot
+                                                        .hasData ||
+                                                    bookSnapshot
+                                                        .data!
+                                                        .isEmpty) {
                                                   return const Padding(
-                                                    padding: EdgeInsets.symmetric(horizontal: 16),
-                                                    child: Text('No books in this genre.'),
+                                                    padding:
+                                                        EdgeInsets.symmetric(
+                                                          horizontal: 16,
+                                                        ),
+                                                    child: Text(
+                                                      'No books in this genre.',
+                                                    ),
                                                   );
                                                 }
 
                                                 final books = bookSnapshot.data!
-                                                    .where((b) => b.coverImage.isNotEmpty)
+                                                    .where(
+                                                      (b) => b
+                                                          .coverImage
+                                                          .isNotEmpty,
+                                                    )
                                                     .toList();
 
                                                 return SizedBox(
                                                   height: 320,
                                                   child: ListView.builder(
-                                                    scrollDirection: Axis.horizontal,
+                                                    scrollDirection:
+                                                        Axis.horizontal,
                                                     itemCount: books.length,
                                                     itemBuilder: (context, i) {
                                                       return SizedBox(
-                                                        width: MediaQuery.of(context).size.width / 2,
-                                                        child: BookCard(book: books[i]),
+                                                        width:
+                                                            MediaQuery.of(
+                                                              context,
+                                                            ).size.width /
+                                                            2,
+                                                        child: BookCard(
+                                                          book: books[i],
+                                                        ),
                                                       );
                                                     },
                                                   ),
@@ -371,21 +433,35 @@ class _HomePageState extends State<HomePage> {
                                     } else {
                                       // Pagination sebagai item terakhir
                                       return Padding(
-                                        padding: const EdgeInsets.symmetric(vertical: 16),
+                                        padding: const EdgeInsets.symmetric(
+                                          vertical: 16,
+                                        ),
                                         child: Row(
-                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
                                           children: [
                                             IconButton(
-                                              icon: const Icon(Icons.arrow_back),
+                                              icon: const Icon(
+                                                Icons.arrow_back,
+                                              ),
                                               onPressed: currentPage > 0
-                                                  ? () => setState(() => currentPage--)
+                                                  ? () => setState(
+                                                      () => currentPage--,
+                                                    )
                                                   : null,
                                             ),
-                                            Text('Page ${currentPage + 1} of $totalPages'),
+                                            Text(
+                                              'Page ${currentPage + 1} of $totalPages',
+                                            ),
                                             IconButton(
-                                              icon: const Icon(Icons.arrow_forward),
-                                              onPressed: currentPage < totalPages - 1
-                                                  ? () => setState(() => currentPage++)
+                                              icon: const Icon(
+                                                Icons.arrow_forward,
+                                              ),
+                                              onPressed:
+                                                  currentPage < totalPages - 1
+                                                  ? () => setState(
+                                                      () => currentPage++,
+                                                    )
                                                   : null,
                                             ),
                                           ],
