@@ -7,6 +7,7 @@ class GenreApiService {
   static const String baseUrl = 'https://bukuacak-9bdcb4ef2605.herokuapp.com/api/v1';
 
   static Future<List<GenreStat>> fetchGenreStats() async {
+    // Fetch genre statistics
     final response = await http.get(Uri.parse('$baseUrl/stats/genre'));
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
@@ -17,7 +18,7 @@ class GenreApiService {
     }
   }
 
-  // ✅ Tambahkan ini jika belum ada
+  // Fetch books by genre
   static Future<List<Book>> fetchBooksByGenre(String genre) async {
     final response = await http.get(Uri.parse('$baseUrl/book?genre=$genre'));
     if (response.statusCode == 200) {
