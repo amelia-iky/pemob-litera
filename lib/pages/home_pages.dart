@@ -48,36 +48,62 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         title: const Text('Litera',
           style: TextStyle(
-          color: Colors.black,
-          fontSize: 24,
+            color: Colors.black,
+           fontSize: 24,
+            fontWeight: FontWeight.bold
           ),
         ),
         backgroundColor: const Color(0xFFFFC0CB),
       ),
       drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: const [
-            DrawerHeader(
-              decoration: BoxDecoration(color: Color(0xFFFFC0CB)),
-              child: Text(
-                'Menu',
-                style: TextStyle(color: Colors.white, fontSize: 24),
+        child: Column(
+          children: [
+            Expanded(
+              child: ListView(
+                padding: EdgeInsets.zero,
+                children: const [
+                  DrawerHeader(
+                    decoration: BoxDecoration(color: Color(0xFFFFC0CB)),
+                    child: Text(
+                      'Menu',
+                      style: TextStyle(color: Colors.white, fontSize: 24),
+                    ),
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.person),
+                    title: Text('Profile'),
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.favorite),
+                    title: Text('Favorite'),
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.bookmark),
+                    title: Text('Save'),
+                  ),
+                ],
               ),
             ),
-            ListTile(
-              leading: Icon(Icons.person),
-              title: Text('Profile'),
-            ),
-            ListTile(
-              leading: Icon(Icons.favorite),
-              title: Text('Favorite'),
-            ),
-            ListTile(
-              leading: Icon(Icons.bookmark),
-              title: Text('Save'),
+            const Padding(
+              padding: EdgeInsets.only(top: 16, bottom: 32),
+              child: Column(
+                children: [
+                  Text(
+                    'Developed by Amelia Rizky Yuniar',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 12, color: Colors.grey),
+                  ),
+                  SizedBox(height: 4),
+                  Text(
+                    'Version 1.0.0',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 12, color: Colors.grey),
+                  ),
+                ],
+              ),
             ),
           ],
         ),
