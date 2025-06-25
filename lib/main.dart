@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'pages/home_pages.dart';
+import 'pages/login_pages.dart';
 
 void main() {
   runApp(const MyApp());
@@ -12,7 +12,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Litera',
       debugShowCheckedModeBanner: false,
-      home: HomePage(),
+      home: LoginPage(),
     );
   }
 }
