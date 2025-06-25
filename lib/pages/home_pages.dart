@@ -8,8 +8,6 @@ import '../services/genre_api_services.dart';
 import '../services/user_api_services.dart';
 import '../widgets/book_card.dart';
 
-
-
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -60,7 +58,7 @@ class _HomePageState extends State<HomePage> {
         title: const Text('Litera',
           style: TextStyle(
             color: Colors.black,
-           fontSize: 24,
+            fontSize: 24,
             fontWeight: FontWeight.bold
           ),
         ),
@@ -73,51 +71,83 @@ class _HomePageState extends State<HomePage> {
               future: _userProfile,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const DrawerHeader(
-                    decoration: BoxDecoration(color: Color(0xfff8c9d3)),
-                    child: Center(child: CircularProgressIndicator(color: Colors.white)),
+                  return const SizedBox(
+                    height: 200,
+                    width: double.infinity,
+                    child: DrawerHeader(
+                      decoration: BoxDecoration(
+                        color: Color(0xfff8c9d3),
+                      ),
+                      margin: EdgeInsets.zero,
+                      padding: EdgeInsets.zero,
+                      child: Center(
+                        child: CircularProgressIndicator(color: Colors.white),
+                      ),
+                    ),
                   );
                 } else if (snapshot.hasError || !snapshot.hasData) {
-                  return const DrawerHeader(
-                    decoration: BoxDecoration(color: Color(0xfff8c9d3)),
-                    child: Text(
-                      'User tidak ditemukan',
-                      style: TextStyle(color: Colors.white, fontSize: 18),
+                  return const SizedBox(
+                    height: 200,
+                    width: double.infinity,
+                    child: DrawerHeader(
+                      decoration: BoxDecoration(color: Color(0xfff8c9d3)),
+                      margin: EdgeInsets.zero,
+                      padding: EdgeInsets.zero,
+                      child: Center(
+                        child: Text(
+                          'User tidak ditemukan',
+                          style: TextStyle(color: Colors.white, fontSize: 18),
+                        ),
+                      ),
                     ),
                   );
                 }
 
                 final user = snapshot.data!;
-                final imageUrl = user.profileImages.isNotEmpty ? user.profileImages.first.url : null;
+                final imageUrl =
+                    user.profileImages.isNotEmpty ? user.profileImages.first.url : null;
 
-                return DrawerHeader(
+                return SizedBox(
+                  height: 200,
+                  width: double.infinity,
+                  child: DrawerHeader(
                   decoration: const BoxDecoration(color: Color(0xfff8c9d3)),
+                  margin: EdgeInsets.zero,
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: Column(
-                    mainAxisAlignment:
-                    MainAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       CircleAvatar(
-                        radius: 30,
+                        radius: 35,
                         backgroundColor: Colors.white,
                         backgroundImage: imageUrl != null ? NetworkImage(imageUrl) : null,
                         child: imageUrl == null
                             ? const Icon(Icons.person, size: 50, color: Colors.grey)
                             : null,
                       ),
+                      const SizedBox(height: 12),
                       Text(
                         user.name,
                         maxLines: 2,
-                        style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
                         overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                       Text(
                         user.email,
-                        style: const TextStyle(color: Colors.white, fontSize: 14),
                         overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 14,
+                        ),
                       ),
                     ],
                   ),
+                ),
                 );
               },
             ),
@@ -126,8 +156,8 @@ class _HomePageState extends State<HomePage> {
                 padding: EdgeInsets.zero,
                 children: [
                   ListTile(
-                    leading: Icon(Icons.person),
-                    title: Text('Profile'),
+                    leading: const Icon(Icons.person),
+                    title: const Text('Profile'),
                     onTap: () {
                       Navigator.pop(context);
                       Navigator.push(
@@ -136,11 +166,11 @@ class _HomePageState extends State<HomePage> {
                       );
                     },
                   ),
-                  ListTile(
+                  const ListTile(
                     leading: Icon(Icons.favorite),
                     title: Text('Favorite'),
                   ),
-                  ListTile(
+                  const ListTile(
                     leading: Icon(Icons.bookmark),
                     title: Text('Save'),
                   ),
@@ -152,15 +182,15 @@ class _HomePageState extends State<HomePage> {
               child: Column(
                 children: [
                   Text(
-                    'Developed by Amelia Rizky Yuniar',
+                    'Developed with ❤️ by Amelia Rizky Yuniar',
                     textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 12, color: Colors.grey),
+                    style: TextStyle(fontSize: 13, color: Colors.grey),
                   ),
                   SizedBox(height: 4),
                   Text(
                     'Version 1.0.0',
                     textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 12, color: Colors.grey),
+                    style: TextStyle(fontSize: 13, color: Colors.grey),
                   ),
                 ],
               ),
