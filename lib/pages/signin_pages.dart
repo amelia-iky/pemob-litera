@@ -98,7 +98,7 @@ class _LoginPageState extends State<SigninPage> {
                     ),
                   ),
                   validator: (value) => value == null || value.isEmpty
-                      ? 'Masukkan username'
+                      ? 'Please enter your username'
                       : null,
                 ),
                 const SizedBox(height: 20),
@@ -125,7 +125,7 @@ class _LoginPageState extends State<SigninPage> {
                     ),
                   ),
                   validator: (value) => value == null || value.length < 6
-                      ? 'Minimal 6 karakter'
+                      ? 'Please enter a password with at least 6 characters'
                       : null,
                 ),
                 const SizedBox(height: 30),
