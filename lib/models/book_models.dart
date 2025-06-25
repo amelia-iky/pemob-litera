@@ -13,6 +13,8 @@ class Book {
   final String publishedDate;
   final String format;
   final String publisher;
+  final List<Tag> tags;
+  final List<BuyLink> buyLinks;
 
   Book({
     required this.id,
@@ -29,6 +31,8 @@ class Book {
     required this.publishedDate,
     required this.format,
     required this.publisher,
+    required this.tags,
+    required this.buyLinks,
   });
 
   factory Book.fromJson(Map<String, dynamic> json) {
@@ -51,6 +55,42 @@ class Book {
       publishedDate: details['published_date']?.toString() ?? '',
       format: details['format']?.toString() ?? '',
       publisher: json['publisher']?.toString() ?? '',
+      tags: (json['tags'] as List<dynamic>? ?? []).map((tag) => Tag.fromJson(tag)).toList(),
+      buyLinks: (json['buy_links'] as List<dynamic>? ?? []).map((link) => BuyLink.fromJson(link)).toList(),
+    );
+  }
+}
+
+class Tag {
+  final String name;
+  final String url;
+
+  Tag({
+    required this.name,
+    required this.url,
+  });
+
+  factory Tag.fromJson(Map<String, dynamic> json) {
+    return Tag(
+      name: json['name']?.toString() ?? '',
+      url: json['url']?.toString() ?? '',
+    );
+  }
+}
+
+class BuyLink {
+  final String store;
+  final String url;
+
+  BuyLink({
+    required this.store,
+    required this.url,
+  });
+
+  factory BuyLink.fromJson(Map<String, dynamic> json) {
+    return BuyLink(
+      store: json['store']?.toString() ?? '',
+      url: json['url']?.toString() ?? '',
     );
   }
 }
