@@ -33,7 +33,7 @@ class _DetailBookPageState extends State<DetailBookPage> {
             fontWeight: FontWeight.bold
           ),
         ),
-        backgroundColor: const Color(0xFFFFC0CB),
+        backgroundColor: const Color(0xfff8c9d3),
         iconTheme: const IconThemeData(color: Colors.black),
       ),
       body: FutureBuilder<Book>(
@@ -135,8 +135,8 @@ class _DetailBookPageState extends State<DetailBookPage> {
                         const Text(
                           'Tags:',
                           style: TextStyle(
-                            fontWeight: FontWeight.bold,
                             fontSize: 16,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
                         const SizedBox(height: 8),
@@ -145,8 +145,11 @@ class _DetailBookPageState extends State<DetailBookPage> {
                           runSpacing: 4,
                           children: book.tags.map((tag) {
                             return Chip(
-                              label: Text(tag.name),
-                              backgroundColor: Colors.pink[100],
+                              label: Text(
+                                tag.name,
+                                style: const TextStyle(color: Colors.white),
+                              ),
+                              backgroundColor: Color(0xfff8c9d3),
                               elevation: 0,
                               shape: const StadiumBorder(
                                 side: BorderSide.none,
