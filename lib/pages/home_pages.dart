@@ -164,8 +164,22 @@ class _HomePageState extends State<HomePage> {
                   ListTile(
                     leading: const Icon(Icons.person),
                     title: const Text('Profile'),
-                    onTap: () {
+                    onTap: () async {
                       Navigator.pop(context);
+
+                      final updated = await Navigator.push<bool>(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const ProfilePage(),
+                        ),
+                      );
+
+                      if (updated == true) {
+                        setState(() {
+                          _userProfile = UserApiService.fetchUserProfile();
+                        });
+                      }
+
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -180,7 +194,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                   const ListTile(
                     leading: Icon(Icons.bookmark),
-                    title: Text('Save'),
+                    title: Text('Saved'),
                   ),
                 ],
               ),
