@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../models/user_models.dart';
 import '../services/user_api_services.dart';
+import 'login_pages.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -35,6 +37,18 @@ class _ProfilePageState extends State<ProfilePage> {
     }
   }
 
+  Future<void> _logout() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('token');
+    if (context.mounted) {
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (_) => const LoginPage()),
+        (route) => false,
+      );
+    }
+  }
+
   Widget _buildProfileImage() {
     final imageUrl = _user?.profileImages.isNotEmpty == true
         ? _user!.profileImages.first.url
@@ -44,40 +58,22 @@ class _ProfilePageState extends State<ProfilePage> {
       alignment: Alignment.bottomRight,
       children: [
         CircleAvatar(
-          radius: 75,
-          backgroundImage: imageUrl != null && imageUrl.isNotEmpty
-              ? NetworkImage(imageUrl)
-              : null,
+          radius: 70,
+          backgroundImage:
+              imageUrl != null ? NetworkImage(imageUrl) : null,
           backgroundColor: Colors.grey[300],
           child: imageUrl == null
-              ? const Icon(Icons.person, size: 75, color: Colors.white)
+              ? const Icon(Icons.person, size: 70, color: Colors.white)
               : null,
         ),
-        Positioned(
-          bottom: 8,
-          right: 8,
-          child: GestureDetector(
-            onTap: () {
-              // TODO: Tambahkan fungsi untuk mengganti foto
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Fitur edit foto akan segera hadir!')),
-              );
+        CircleAvatar(
+          radius: 18,
+          backgroundColor: Colors.white,
+          child: IconButton(
+            icon: const Icon(Icons.edit, size: 18),
+            onPressed: () {
+              // TODO: Handle edit profile image
             },
-            child: Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: Colors.pink[300],
-                shape: BoxShape.circle,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.2),
-                    blurRadius: 4,
-                    offset: const Offset(2, 2),
-                  ),
-                ],
-              ),
-              child: const Icon(Icons.edit, size: 20, color: Colors.white),
-            ),
           ),
         ),
       ],
@@ -100,28 +96,76 @@ class _ProfilePageState extends State<ProfilePage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Profil Saya'),
-        backgroundColor: const Color(0xffd29ea7),
+        centerTitle: true,
+        title: Text('Profile',
+          style: const TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold
+          ),
+        ),
+        backgroundColor: const Color(0xfff8c9d3),
       ),
       body: Padding(
         padding: const EdgeInsets.all(24.0),
         child: Column(
           children: [
             _buildProfileImage(),
-            const SizedBox(height: 20),
-            Text(
-              _user!.name,
-              style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+            const SizedBox(height: 24),
+            TextFormField(
+              initialValue: _user!.name,
+              readOnly: true,
+              decoration: InputDecoration(
+                labelText: 'Nama',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
             ),
-            const SizedBox(height: 8),
-            Text(
-              '@${_user!.username}',
-              style: const TextStyle(fontSize: 16, color: Colors.grey),
+            const SizedBox(height: 16),
+            TextFormField(
+              initialValue: _user!.username,
+              readOnly: true,
+              decoration: InputDecoration(
+                labelText: 'Username',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
             ),
-            const SizedBox(height: 8),
-            Text(
-              _user!.email,
-              style: const TextStyle(fontSize: 16),
+            const SizedBox(height: 16),
+            TextFormField(
+              initialValue: _user!.email,
+              readOnly: true,
+              decoration: InputDecoration(
+                labelText: 'Email',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+            ),
+            const Spacer(),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton.icon(
+                onPressed: _logout,
+                icon: const Icon(Icons.logout, 
+                  color: Colors.white,
+                ),
+                label: Text('Logout',
+                  style: const TextStyle(
+                    fontSize: 16, 
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.pink[500],
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+              ),
             ),
           ],
         ),
