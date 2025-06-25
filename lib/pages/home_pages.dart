@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import '../models/book_models.dart';
 import '../models/genre_models.dart';
-import '../services/genre_api_services.dart';
+import '../models/user_models.dart';
 import '../services/book_api_services.dart';
+import '../services/genre_api_services.dart';
+import '../services/user_api_services.dart';
 import '../widgets/book_card.dart';
+
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -23,10 +26,13 @@ class _HomePageState extends State<HomePage> {
   int currentPage = 0;
   final int genresPerPage = 5;
 
+  late Future<UserProfile> _userProfile;
+
   @override
   void initState() {
     super.initState();
     _genreFuture = GenreApiService.fetchGenreStats();
+    _userProfile = UserApiService.fetchUserProfile();
   }
 
   void _performSearch(String query) {
@@ -56,22 +62,67 @@ class _HomePageState extends State<HomePage> {
             fontWeight: FontWeight.bold
           ),
         ),
-        backgroundColor: const Color(0xFFFFC0CB),
+        backgroundColor: const Color(0xfff8c9d3),
       ),
       drawer: Drawer(
         child: Column(
           children: [
+            FutureBuilder<UserProfile>(
+              future: _userProfile,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const DrawerHeader(
+                    decoration: BoxDecoration(color: Color(0xfff8c9d3)),
+                    child: Center(child: CircularProgressIndicator(color: Colors.white)),
+                  );
+                } else if (snapshot.hasError || !snapshot.hasData) {
+                  return const DrawerHeader(
+                    decoration: BoxDecoration(color: Color(0xfff8c9d3)),
+                    child: Text(
+                      'User tidak ditemukan',
+                      style: TextStyle(color: Colors.white, fontSize: 18),
+                    ),
+                  );
+                }
+
+                final user = snapshot.data!;
+                final imageUrl = user.profileImages.isNotEmpty ? user.profileImages.first.url : null;
+
+                return DrawerHeader(
+                  decoration: const BoxDecoration(color: Color(0xfff8c9d3)),
+                  child: Column(
+                    mainAxisAlignment:
+                    MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      CircleAvatar(
+                        radius: 30,
+                        backgroundColor: Colors.white,
+                        backgroundImage: imageUrl != null ? NetworkImage(imageUrl) : null,
+                        child: imageUrl == null
+                            ? const Icon(Icons.person, size: 50, color: Colors.grey)
+                            : null,
+                      ),
+                      Text(
+                        user.name,
+                        maxLines: 2,
+                        style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      Text(
+                        user.email,
+                        style: const TextStyle(color: Colors.white70, fontSize: 14),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
             Expanded(
               child: ListView(
                 padding: EdgeInsets.zero,
                 children: const [
-                  DrawerHeader(
-                    decoration: BoxDecoration(color: Color(0xFFFFC0CB)),
-                    child: Text(
-                      'Menu',
-                      style: TextStyle(color: Colors.white, fontSize: 24),
-                    ),
-                  ),
                   ListTile(
                     leading: Icon(Icons.person),
                     title: Text('Profile'),
