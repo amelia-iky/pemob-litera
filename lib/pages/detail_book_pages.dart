@@ -26,11 +26,12 @@ class _DetailBookPageState extends State<DetailBookPage> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: const Text('Detail Buku',
+        title: const Text(
+          'Detail Buku',
           style: TextStyle(
-            color: Colors.black, 
+            color: Colors.black,
             fontSize: 24,
-            fontWeight: FontWeight.bold
+            fontWeight: FontWeight.bold,
           ),
         ),
         backgroundColor: const Color(0xfff8c9d3),
@@ -83,14 +84,20 @@ class _DetailBookPageState extends State<DetailBookPage> {
                         ),
                       ),
                       const SizedBox(height: 8),
-                      Text('Penulis: ${book.author}',
-                          style: const TextStyle(fontSize: 14)),
+                      Text(
+                        'Penulis: ${book.author}',
+                        style: const TextStyle(fontSize: 14),
+                      ),
                       const SizedBox(height: 4),
-                      Text('Kategori: ${book.category}',
-                          style: const TextStyle(fontSize: 14)),
+                      Text(
+                        'Kategori: ${book.category}',
+                        style: const TextStyle(fontSize: 14),
+                      ),
                       const SizedBox(height: 4),
-                      Text('Penerbit: ${book.publisher}',
-                          style: const TextStyle(fontSize: 14)),
+                      Text(
+                        'Penerbit: ${book.publisher}',
+                        style: const TextStyle(fontSize: 14),
+                      ),
                       const SizedBox(height: 16),
                       const Text(
                         'DESKRIPSI',
@@ -133,7 +140,7 @@ class _DetailBookPageState extends State<DetailBookPage> {
                       // Tags
                       if (book.tags.isNotEmpty) ...[
                         const Text(
-                          'Tags:',
+                          'TAGS',
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
@@ -149,11 +156,9 @@ class _DetailBookPageState extends State<DetailBookPage> {
                                 tag.name,
                                 style: const TextStyle(color: Colors.white),
                               ),
-                              backgroundColor: Color(0xfff8c9d3),
+                              backgroundColor: Colors.pinkAccent.shade100,
                               elevation: 0,
-                              shape: const StadiumBorder(
-                                side: BorderSide.none,
-                              ),
+                              shape: const StadiumBorder(side: BorderSide.none),
                             );
                           }).toList(),
                         ),
@@ -170,7 +175,7 @@ class _DetailBookPageState extends State<DetailBookPage> {
                 padding: const EdgeInsets.fromLTRB(16, 6, 16, 22),
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.pink[500],
+                    backgroundColor: Colors.pinkAccent.shade200,
                     shadowColor: Colors.transparent,
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(
@@ -178,20 +183,27 @@ class _DetailBookPageState extends State<DetailBookPage> {
                     ),
                   ),
                   onPressed: () async {
-                    final url = book.buyLinks.isNotEmpty ? book.buyLinks.first.url : null;
+                    final url = book.buyLinks.isNotEmpty
+                        ? book.buyLinks.first.url
+                        : null;
 
                     if (url != null && url.isNotEmpty) {
                       try {
                         final uri = Uri.parse(url);
                         final canLaunch = await canLaunchUrl(uri);
                         if (canLaunch) {
-                          await launchUrl(uri, mode: LaunchMode.platformDefault);
+                          await launchUrl(
+                            uri,
+                            mode: LaunchMode.platformDefault,
+                          );
                         } else {
                           throw 'Cannot launch';
                         }
                       } catch (e) {
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Link tidak dapat dibuka')),
+                          const SnackBar(
+                            content: Text('Link tidak dapat dibuka'),
+                          ),
                         );
                       }
                     } else {
