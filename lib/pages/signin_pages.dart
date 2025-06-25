@@ -3,15 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'home_pages.dart';
+import 'signup_pages.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+class SigninPage extends StatefulWidget {
+  const SigninPage({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<SigninPage> createState() => _LoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _LoginPageState extends State<SigninPage> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -28,10 +29,7 @@ class _LoginPageState extends State<LoginPage> {
         final response = await http.post(
           url,
           headers: {'Content-Type': 'application/json'},
-          body: jsonEncode({
-            'username': username,
-            'password': password,
-          }),
+          body: jsonEncode({'username': username, 'password': password}),
         );
 
         if (response.statusCode == 200) {
@@ -63,9 +61,7 @@ class _LoginPageState extends State<LoginPage> {
         content: Text(message),
         backgroundColor: color,
         behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
         duration: const Duration(seconds: 2),
       ),
@@ -83,17 +79,11 @@ class _LoginPageState extends State<LoginPage> {
             key: _formKey,
             child: Column(
               children: [
-                Image.asset(
-                  'assets/icon/app_icon.png',
-                  height: 175,
-                ),
+                Image.asset('assets/icon/app_icon.png', height: 175),
                 const SizedBox(height: 20),
                 const Text(
-                  'Litera Login',
-                  style: TextStyle(
-                    fontSize: 28,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  'Litera SignIn',
+                  style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 30),
 
@@ -107,8 +97,9 @@ class _LoginPageState extends State<LoginPage> {
                       borderRadius: BorderRadius.all(Radius.circular(20)),
                     ),
                   ),
-                  validator: (value) =>
-                      value == null || value.isEmpty ? 'Masukkan username' : null,
+                  validator: (value) => value == null || value.isEmpty
+                      ? 'Masukkan username'
+                      : null,
                 ),
                 const SizedBox(height: 20),
 
@@ -125,17 +116,17 @@ class _LoginPageState extends State<LoginPage> {
                             ? Icons.visibility
                             : Icons.visibility_off,
                       ),
-                      onPressed: () =>
-                          setState(() => _isPasswordVisible = !_isPasswordVisible),
+                      onPressed: () => setState(
+                        () => _isPasswordVisible = !_isPasswordVisible,
+                      ),
                     ),
                     border: const OutlineInputBorder(
                       borderRadius: BorderRadius.all(Radius.circular(20)),
                     ),
                   ),
-                  validator: (value) =>
-                      value == null || value.length < 6
-                          ? 'Minimal 6 karakter'
-                          : null,
+                  validator: (value) => value == null || value.length < 6
+                      ? 'Minimal 6 karakter'
+                      : null,
                 ),
                 const SizedBox(height: 30),
 
@@ -160,6 +151,19 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                   ),
+                ),
+
+                const SizedBox(height: 8),
+                TextButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const SignupPage(),
+                      ),
+                    );
+                  },
+                  child: const Text("Don't have an account? Sign up here."),
                 ),
               ],
             ),
