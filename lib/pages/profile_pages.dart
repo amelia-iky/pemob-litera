@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/user_models.dart';
 import '../services/user_api_services.dart';
-import 'login_pages.dart';
+import 'signin_pages.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -43,7 +43,7 @@ class _ProfilePageState extends State<ProfilePage> {
     if (context.mounted) {
       Navigator.pushAndRemoveUntil(
         context,
-        MaterialPageRoute(builder: (_) => const LoginPage()),
+        MaterialPageRoute(builder: (_) => const SigninPage()),
         (route) => false,
       );
     }
