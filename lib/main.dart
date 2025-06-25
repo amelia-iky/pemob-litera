@@ -17,6 +17,17 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Litera',
+      theme: ThemeData(
+        progressIndicatorTheme: const ProgressIndicatorThemeData(
+          color: Color(0xfff8c9d3),
+        ),
+        inputDecorationTheme: InputDecorationTheme(
+          focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Color(0xfff8c9d3), width: 2),
+            borderRadius: BorderRadius.circular(12),
+          ),
+        ),
+      ),
       home: const SessionChecker(),
       debugShowCheckedModeBanner: false,
     );
