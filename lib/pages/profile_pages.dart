@@ -59,8 +59,7 @@ class _ProfilePageState extends State<ProfilePage> {
       children: [
         CircleAvatar(
           radius: 70,
-          backgroundImage:
-              imageUrl != null ? NetworkImage(imageUrl) : null,
+          backgroundImage: imageUrl != null ? NetworkImage(imageUrl) : null,
           backgroundColor: Colors.grey[300],
           child: imageUrl == null
               ? const Icon(Icons.person, size: 70, color: Colors.white)
@@ -71,9 +70,7 @@ class _ProfilePageState extends State<ProfilePage> {
           backgroundColor: Colors.white,
           child: IconButton(
             icon: const Icon(Icons.edit, size: 18),
-            onPressed: () {
-              // TODO: Handle edit profile image
-            },
+            onPressed: () {},
           ),
         ),
       ],
@@ -83,25 +80,19 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
-      return const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
-      );
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
     if (_error != null) {
-      return Scaffold(
-        body: Center(child: Text('Error: $_error')),
-      );
+      return Scaffold(body: Center(child: Text('Error: $_error')));
     }
 
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text('Profile',
-          style: const TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold
-          ),
+        title: Text(
+          'Profile',
+          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
         ),
         backgroundColor: const Color(0xfff8c9d3),
       ),
@@ -148,12 +139,11 @@ class _ProfilePageState extends State<ProfilePage> {
               width: double.infinity,
               child: ElevatedButton.icon(
                 onPressed: _logout,
-                icon: const Icon(Icons.logout, 
-                  color: Colors.white,
-                ),
-                label: Text('Logout',
+                icon: const Icon(Icons.logout, color: Colors.white),
+                label: Text(
+                  'Logout',
                   style: const TextStyle(
-                    fontSize: 16, 
+                    fontSize: 16,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
                   ),
