@@ -1,15 +1,14 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
+import '../services/auth_api_service.dart';
 
-class SignupPage extends StatefulWidget {
-  const SignupPage({super.key});
+class SignUpPage extends StatefulWidget {
+  const SignUpPage({super.key});
 
   @override
-  State<SignupPage> createState() => _RegisterPageState();
+  State<SignUpPage> createState() => _SignUpPageState();
 }
 
-class _RegisterPageState extends State<SignupPage> {
+class _SignUpPageState extends State<SignUpPage> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _usernameController = TextEditingController();
@@ -17,41 +16,41 @@ class _RegisterPageState extends State<SignupPage> {
   final TextEditingController _passwordController = TextEditingController();
   bool _isPasswordVisible = false;
 
-  Future<void> _register() async {
+  // Handle Signup
+  Future<void> _signup() async {
     if (_formKey.currentState!.validate()) {
       final name = _nameController.text.trim();
       final username = _usernameController.text.trim();
       final email = _emailController.text.trim();
       final password = _passwordController.text;
 
-      final url = Uri.parse('https://api-litera.vercel.app/auth/signup');
+      // Loading
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (_) => const Center(child: CircularProgressIndicator()),
+      );
 
       try {
-        final response = await http.post(
-          url,
-          headers: {'Content-Type': 'application/json'},
-          body: jsonEncode({
-            'name': name,
-            'username': username,
-            'email': email,
-            'password': password,
-          }),
+        await AuthApiService.signup(
+          name: name,
+          username: username,
+          email: email,
+          password: password,
         );
 
-        if (response.statusCode == 201) {
-          _showSnackBar('Registrasi berhasil! Silakan login.', Colors.green);
-          Navigator.pop(context);
-        } else {
-          final msg =
-              jsonDecode(response.body)['message'] ?? 'Gagal mendaftar.';
-          _showSnackBar(msg, Colors.red);
-        }
+        Navigator.of(context, rootNavigator: true).pop();
+        _showSnackBar('Sign Up Successfully. Please Sign In!', Colors.green);
+        Navigator.pop(context);
       } catch (e) {
-        _showSnackBar('Terjadi kesalahan. Coba lagi nanti.', Colors.red);
+        Navigator.of(context, rootNavigator: true).pop();
+        final msg = e.toString().replaceFirst('Exception: ', '');
+        _showSnackBar(msg, Colors.red);
       }
     }
   }
 
+  // Pop up snackbar
   void _showSnackBar(String message, Color color) {
     ScaffoldMessenger.of(context).clearSnackBars();
     ScaffoldMessenger.of(context).showSnackBar(
@@ -85,11 +84,11 @@ class _RegisterPageState extends State<SignupPage> {
                 ),
                 const SizedBox(height: 30),
 
-                // Name
+                // Full Name
                 TextFormField(
                   controller: _nameController,
                   decoration: const InputDecoration(
-                    labelText: 'Nama Lengkap',
+                    labelText: 'Full Name',
                     prefixIcon: Icon(Icons.person_outline),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.all(Radius.circular(20)),
@@ -160,11 +159,11 @@ class _RegisterPageState extends State<SignupPage> {
                 ),
                 const SizedBox(height: 30),
 
-                // Register Button
+                // SignUp Button
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
-                    onPressed: _register,
+                    onPressed: _signup,
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 16),
                       backgroundColor: const Color(0xfff8c9d3),
@@ -173,7 +172,7 @@ class _RegisterPageState extends State<SignupPage> {
                       ),
                     ),
                     child: const Text(
-                      'Register',
+                      'SignUp',
                       style: TextStyle(
                         fontSize: 18,
                         color: Colors.white,
@@ -183,6 +182,8 @@ class _RegisterPageState extends State<SignupPage> {
                   ),
                 ),
                 const SizedBox(height: 8),
+
+                // Link for signin
                 TextButton(
                   onPressed: () => Navigator.pop(context),
                   child: const Text("Already have an account? Sign in here."),
