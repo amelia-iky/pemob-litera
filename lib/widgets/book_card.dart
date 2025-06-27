@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/book_models.dart';
-import '../pages/detail_book_pages.dart';
+import '../pages/book_detail_pages.dart';
 
 class BookCard extends StatefulWidget {
   final Book book;
@@ -23,7 +23,7 @@ class _BookCardState extends State<BookCard> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (_) => DetailBookPage(bookId: widget.book.id),
+            builder: (_) => BookDetailPage(bookId: widget.book.id),
           ),
         );
       },
