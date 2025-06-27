@@ -16,11 +16,15 @@ class MyApp extends StatelessWidget {
       title: 'Litera',
       theme: ThemeData(
         progressIndicatorTheme: const ProgressIndicatorThemeData(
-          color: Color(0xfff8c9d3),
+          color: Colors.pinkAccent,
         ),
         inputDecorationTheme: InputDecorationTheme(
           focusedBorder: OutlineInputBorder(
             borderSide: BorderSide(color: Color(0xfff8c9d3), width: 2),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderSide: const BorderSide(color: Color(0xfff8c9d3), width: 1),
             borderRadius: BorderRadius.circular(12),
           ),
         ),
