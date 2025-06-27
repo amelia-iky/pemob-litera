@@ -3,16 +3,16 @@ import 'package:url_launcher/url_launcher.dart';
 import '../models/book_models.dart';
 import '../services/book_api_service.dart';
 
-class DetailBookPage extends StatefulWidget {
+class BookDetailPage extends StatefulWidget {
   final String bookId;
 
-  const DetailBookPage({super.key, required this.bookId});
+  const BookDetailPage({super.key, required this.bookId});
 
   @override
-  State<DetailBookPage> createState() => _DetailBookPageState();
+  State<BookDetailPage> createState() => _BookDetailPageState();
 }
 
-class _DetailBookPageState extends State<DetailBookPage> {
+class _BookDetailPageState extends State<BookDetailPage> {
   late Future<Book> _bookDetail;
 
   @override
@@ -60,19 +60,35 @@ class _DetailBookPageState extends State<DetailBookPage> {
                       Center(
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(12),
-                          child: Image.network(
-                            book.coverImage,
-                            height: 500,
-                            width: double.infinity,
-                            fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) {
-                              return Image.network(
-                                'https://via.placeholder.com/150',
-                                height: 300,
-                                fit: BoxFit.cover,
-                              );
-                            },
-                          ),
+                          child: book.coverImage.isNotEmpty
+                              ? Image.network(
+                                  book.coverImage,
+                                  height: 500,
+                                  width: double.infinity,
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (context, error, stackTrace) {
+                                    return Container(
+                                      height: 500,
+                                      width: double.infinity,
+                                      color: Colors.grey[300],
+                                      child: const Icon(
+                                        Icons.broken_image,
+                                        size: 80,
+                                        color: Colors.grey,
+                                      ),
+                                    );
+                                  },
+                                )
+                              : Container(
+                                  height: 500,
+                                  width: double.infinity,
+                                  color: Colors.grey[300],
+                                  child: const Icon(
+                                    Icons.broken_image,
+                                    size: 80,
+                                    color: Colors.grey,
+                                  ),
+                                ),
                         ),
                       ),
                       const SizedBox(height: 16),
