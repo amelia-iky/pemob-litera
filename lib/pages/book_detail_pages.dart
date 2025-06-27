@@ -28,11 +28,7 @@ class _BookDetailPageState extends State<BookDetailPage> {
         centerTitle: true,
         title: const Text(
           'Book Detail',
-          style: TextStyle(
-            color: Colors.black,
-            fontSize: 24,
-            fontWeight: FontWeight.w800,
-          ),
+          style: TextStyle(fontSize: 22, fontWeight: FontWeight.w800),
         ),
         backgroundColor: const Color(0xfff8c9d3),
         iconTheme: const IconThemeData(color: Colors.black),
