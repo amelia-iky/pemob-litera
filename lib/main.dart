@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:http/http.dart' as http;
 import 'pages/signin_pages.dart';
 import 'pages/home_pages.dart';
+import 'services/auth_api_service.dart';
 
 void main() {
   runApp(const MyApp());
@@ -32,6 +31,7 @@ class MyApp extends StatelessWidget {
   }
 }
 
+// Session checker
 class SessionChecker extends StatefulWidget {
   const SessionChecker({super.key});
 
@@ -46,39 +46,13 @@ class _SessionCheckerState extends State<SessionChecker> {
   @override
   void initState() {
     super.initState();
-    _checkLoginStatus();
+    _initSession();
   }
 
-  Future<void> _checkLoginStatus() async {
-    final prefs = await SharedPreferences.getInstance();
-    final token = prefs.getString('token');
-
-    if (token == null) {
-      setState(() {
-        _isLoading = false;
-        _isLoggedIn = false;
-      });
-      return;
-    }
-
-    try {
-      final response = await http.get(
-        Uri.parse('https://api-litera.vercel.app/auth/keep-login'),
-        headers: {'Authorization': 'Bearer $token'},
-      );
-
-      if (response.statusCode == 200) {
-        setState(() {
-          _isLoggedIn = true;
-        });
-      } else {
-        await prefs.remove('token');
-      }
-    } catch (_) {
-      await prefs.remove('token');
-    }
-
+  Future<void> _initSession() async {
+    final result = await AuthApiService.keepLogin();
     setState(() {
+      _isLoggedIn = result;
       _isLoading = false;
     });
   }
@@ -89,6 +63,6 @@ class _SessionCheckerState extends State<SessionChecker> {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
-    return _isLoggedIn ? const HomePage() : const SigninPage();
+    return _isLoggedIn ? const HomePage() : const SignInPage();
   }
 }
