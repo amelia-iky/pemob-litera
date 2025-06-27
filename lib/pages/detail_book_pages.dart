@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../models/book_models.dart';
-import '../services/book_api_services.dart';
+import '../services/book_api_service.dart';
 
 class DetailBookPage extends StatefulWidget {
   final String bookId;
@@ -27,11 +27,11 @@ class _DetailBookPageState extends State<DetailBookPage> {
       appBar: AppBar(
         centerTitle: true,
         title: const Text(
-          'Detail Buku',
+          'Book Detail',
           style: TextStyle(
             color: Colors.black,
             fontSize: 24,
-            fontWeight: FontWeight.bold,
+            fontWeight: FontWeight.w800,
           ),
         ),
         backgroundColor: const Color(0xfff8c9d3),
@@ -45,7 +45,7 @@ class _DetailBookPageState extends State<DetailBookPage> {
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else if (!snapshot.hasData) {
-            return const Center(child: Text('Buku tidak ditemukan.'));
+            return const Center(child: Text('Book not found'));
           }
 
           final book = snapshot.data!;
@@ -85,22 +85,22 @@ class _DetailBookPageState extends State<DetailBookPage> {
                       ),
                       const SizedBox(height: 8),
                       Text(
-                        'Penulis: ${book.author}',
+                        'Author: ${book.author}',
                         style: const TextStyle(fontSize: 14),
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        'Kategori: ${book.category}',
+                        'Category: ${book.category}',
                         style: const TextStyle(fontSize: 14),
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        'Penerbit: ${book.publisher}',
+                        'Publisher: ${book.publisher}',
                         style: const TextStyle(fontSize: 14),
                       ),
                       const SizedBox(height: 16),
                       const Text(
-                        'DESKRIPSI',
+                        'SUMMARY',
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 16,
@@ -110,7 +110,7 @@ class _DetailBookPageState extends State<DetailBookPage> {
                       Text(
                         book.summary.isNotEmpty
                             ? book.summary
-                            : 'Tidak ada deskripsi tersedia.',
+                            : 'Summary not available',
                         style: const TextStyle(fontSize: 14),
                       ),
                       const SizedBox(height: 16),
@@ -201,14 +201,12 @@ class _DetailBookPageState extends State<DetailBookPage> {
                         }
                       } catch (e) {
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('Link tidak dapat dibuka'),
-                          ),
+                          const SnackBar(content: Text('Link not available')),
                         );
                       }
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Link tidak tersedia')),
+                        const SnackBar(content: Text('Link not available')),
                       );
                     }
                   },
@@ -219,7 +217,7 @@ class _DetailBookPageState extends State<DetailBookPage> {
                       Icon(Icons.shopping_cart, color: Colors.white),
                       SizedBox(width: 8),
                       Text(
-                        'Beli Sekarang',
+                        'Buy Now',
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 16,
