@@ -56,6 +56,31 @@ class AuthApiService {
     }
   }
 
+  // Keep Login
+  static Future<bool> keepLogin() async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token');
+
+    if (token == null) return false;
+
+    try {
+      final response = await http.get(
+        Uri.parse('https://api-litera.vercel.app/auth/keep-login'),
+        headers: {'Authorization': 'Bearer $token'},
+      );
+
+      if (response.statusCode == 200) {
+        return true;
+      } else {
+        await prefs.remove('token');
+        return false;
+      }
+    } catch (_) {
+      await prefs.remove('token');
+      return false;
+    }
+  }
+
   // Signout
   static Future<void> signout() async {
     final prefs = await SharedPreferences.getInstance();
