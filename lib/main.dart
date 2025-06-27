@@ -15,8 +15,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Litera',
       theme: ThemeData(
-        progressIndicatorTheme: const ProgressIndicatorThemeData(
-          color: Colors.pinkAccent,
+        progressIndicatorTheme: ProgressIndicatorThemeData(
+          color: Colors.pinkAccent[100],
         ),
         inputDecorationTheme: InputDecorationTheme(
           focusedBorder: OutlineInputBorder(
