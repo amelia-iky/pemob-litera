@@ -1,11 +1,10 @@
-// genre_book_list.dart
 import 'package:flutter/material.dart';
 import '../models/book_models.dart';
 import '../models/genre_models.dart';
 import '../services/genre_api_service.dart';
 import 'book_card.dart';
 
-class GenreBookList extends StatelessWidget {
+class BookCategory extends StatelessWidget {
   final List<GenreStat> pagedGenres;
   final int currentPage;
   final int totalPages;
@@ -13,7 +12,7 @@ class GenreBookList extends StatelessWidget {
   final void Function() onNextPage;
   final Map<String, Future<List<Book>>> bookFutures;
 
-  const GenreBookList({
+  const BookCategory({
     super.key,
     required this.pagedGenres,
     required this.currentPage,
@@ -53,7 +52,7 @@ class GenreBookList extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        '${genre.count} buku',
+                        '${genre.count} books',
                         style: const TextStyle(
                           fontSize: 14,
                           color: Colors.grey,
