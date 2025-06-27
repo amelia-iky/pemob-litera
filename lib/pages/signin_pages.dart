@@ -1,61 +1,54 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
 import 'home_pages.dart';
 import 'signup_pages.dart';
+import '../services/auth_api_service.dart';
 
-class SigninPage extends StatefulWidget {
-  const SigninPage({super.key});
+class SignInPage extends StatefulWidget {
+  const SignInPage({super.key});
 
   @override
-  State<SigninPage> createState() => _LoginPageState();
+  State<SignInPage> createState() => _SignInPageState();
 }
 
-class _LoginPageState extends State<SigninPage> {
+class _SignInPageState extends State<SignInPage> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool _isPasswordVisible = false;
 
-  Future<void> _login() async {
+  // Handle Signin
+  Future<void> _signin() async {
     if (_formKey.currentState!.validate()) {
       final username = _usernameController.text.trim();
       final password = _passwordController.text;
 
-      final url = Uri.parse('https://api-litera.vercel.app/auth/signin');
+      // Loading
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (_) => const Center(child: CircularProgressIndicator()),
+      );
 
       try {
-        final response = await http.post(
-          url,
-          headers: {'Content-Type': 'application/json'},
-          body: jsonEncode({'username': username, 'password': password}),
+        await AuthApiService.signin(username: username, password: password);
+
+        Navigator.of(context, rootNavigator: true).pop();
+        _showSnackBar('Signin Successfully', Colors.green);
+
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const HomePage()),
         );
-
-        if (response.statusCode == 200) {
-          final responseData = jsonDecode(response.body);
-          final token = responseData['token'];
-
-          final prefs = await SharedPreferences.getInstance();
-          await prefs.setString('token', token);
-
-          _showSnackBar('Login Berhasil!', Colors.green);
-
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => const HomePage()),
-          );
-        } else {
-          _showSnackBar('Username atau Password salah!', Colors.red);
-        }
       } catch (e) {
-        _showSnackBar('Terjadi kesalahan. Coba lagi nanti.', Colors.red);
+        Navigator.of(context, rootNavigator: true).pop();
+        _showSnackBar(e.toString().replaceAll('Exception: ', ''), Colors.red);
       }
     }
   }
 
+  // Pop up snackbar
   void _showSnackBar(String message, Color color) {
-    ScaffoldMessenger.of(context).clearSnackBars(); // hindari duplikat
+    ScaffoldMessenger.of(context).clearSnackBars();
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
@@ -125,16 +118,16 @@ class _LoginPageState extends State<SigninPage> {
                     ),
                   ),
                   validator: (value) => value == null || value.length < 6
-                      ? 'Please enter a password with at least 6 characters'
+                      ? 'Please enter your password'
                       : null,
                 ),
                 const SizedBox(height: 30),
 
-                // Login button
+                // Signin button
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
-                    onPressed: _login,
+                    onPressed: _signin,
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 16),
                       backgroundColor: const Color(0xfff8c9d3),
@@ -143,7 +136,7 @@ class _LoginPageState extends State<SigninPage> {
                       ),
                     ),
                     child: const Text(
-                      'Login',
+                      'SignIn',
                       style: TextStyle(
                         fontSize: 18,
                         color: Colors.white,
@@ -152,14 +145,15 @@ class _LoginPageState extends State<SigninPage> {
                     ),
                   ),
                 ),
-
                 const SizedBox(height: 8),
+
+                // Link to signup
                 TextButton(
                   onPressed: () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const SignupPage(),
+                        builder: (context) => const SignUpPage(),
                       ),
                     );
                   },
