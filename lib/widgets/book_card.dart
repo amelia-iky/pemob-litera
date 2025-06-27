@@ -19,7 +19,7 @@ class _BookCardState extends State<BookCard> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        // Navigasi ke halaman detail
+        // Navigate to detail page
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -40,6 +40,7 @@ class _BookCardState extends State<BookCard> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  // Book Cover
                   ClipRRect(
                     borderRadius: BorderRadius.circular(12),
                     child: Image.network(
@@ -49,26 +50,31 @@ class _BookCardState extends State<BookCard> {
                       fit: BoxFit.cover,
                       height: 150,
                       width: double.infinity,
+                      // Error handling for image
                       errorBuilder: (context, error, stackTrace) {
-                        return Image.network(
-                          'https://via.placeholder.com/150',
-                          fit: BoxFit.cover,
+                        return Container(
                           height: 150,
                           width: double.infinity,
+                          color: Colors.grey[300],
+                          child: const Icon(
+                            Icons.broken_image,
+                            size: 50,
+                            color: Colors.grey,
+                          ),
                         );
                       },
                     ),
                   ),
                   const SizedBox(height: 8),
 
-                  // Judul
+                  // Title
                   Text(
                     widget.book.title,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
-                        fontSize: 15, 
-                        fontWeight: FontWeight.bold
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                   const SizedBox(height: 4),
@@ -78,14 +84,11 @@ class _BookCardState extends State<BookCard> {
                     widget.book.author,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      fontSize: 14,
-                      color: Colors.black54
-                    ),
+                    style: const TextStyle(fontSize: 14, color: Colors.black54),
                   ),
                   const SizedBox(height: 4),
 
-                  // Harga
+                  // Price
                   Text(
                     widget.book.price,
                     style: const TextStyle(
@@ -99,7 +102,7 @@ class _BookCardState extends State<BookCard> {
               ),
             ),
 
-            // Tombol aksi (tidak ikut ter-trigger oleh GestureDetector)
+            // Favorited and Saved
             Positioned(
               bottom: 8,
               right: 8,
