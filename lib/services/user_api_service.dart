@@ -98,6 +98,7 @@ class UserApiService {
     required String bookId,
     required String title,
     required String author,
+    List<String> tags = const [],
     required String coverImage,
   }) async {
     final prefs = await SharedPreferences.getInstance();
@@ -116,13 +117,14 @@ class UserApiService {
         'bookId': bookId,
         'title': title,
         'author': author,
+        'tags': tags,
         'coverImage': coverImage,
       }),
     );
 
     if (response.statusCode == 201) {
       final data = jsonDecode(response.body);
-      return data['favorite']['id'];
+      return data['data']['id'];
     } else {
       final msg =
           jsonDecode(response.body)['message'] ?? 'Failed to add favorite';
@@ -145,7 +147,7 @@ class UserApiService {
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
-      return data['favorites'];
+      return data['data'];
     } else {
       throw Exception('Failed to get favorites');
     }
