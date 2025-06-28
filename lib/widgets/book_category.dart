@@ -11,6 +11,8 @@ class BookCategory extends StatelessWidget {
   final void Function() onPrevPage;
   final void Function() onNextPage;
   final Map<String, Future<List<Book>>> bookFutures;
+  final Set<String> favoriteBookIds;
+  final VoidCallback onFavoriteToggled;
 
   const BookCategory({
     super.key,
@@ -20,6 +22,8 @@ class BookCategory extends StatelessWidget {
     required this.onPrevPage,
     required this.onNextPage,
     required this.bookFutures,
+    required this.favoriteBookIds,
+    required this.onFavoriteToggled,
   });
 
   @override
@@ -88,9 +92,15 @@ class BookCategory extends StatelessWidget {
                         scrollDirection: Axis.horizontal,
                         itemCount: books.length,
                         itemBuilder: (context, i) {
+                          final book = books[i];
+
                           return SizedBox(
                             width: MediaQuery.of(context).size.width / 2,
-                            child: BookCard(book: books[i]),
+                            child: BookCard(
+                              book: book,
+                              isFavorite: favoriteBookIds.contains(book.id),
+                              onFavoriteToggled: onFavoriteToggled,
+                            ),
                           );
                         },
                       ),
@@ -101,6 +111,7 @@ class BookCategory extends StatelessWidget {
             ),
           );
         } else {
+          // Pagination controls
           return Padding(
             padding: const EdgeInsets.symmetric(vertical: 16),
             child: Row(
