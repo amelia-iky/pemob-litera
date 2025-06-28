@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'book_card.dart';
 import '../models/book_models.dart';
 import '../models/genre_models.dart';
-import '../services/genre_api_service.dart';
-import 'book_card.dart';
+import '../services/book_api_service.dart';
 
 class BookCategory extends StatelessWidget {
   final List<GenreStat> pagedGenres;
@@ -31,7 +31,7 @@ class BookCategory extends StatelessWidget {
           final genre = pagedGenres[index];
           bookFutures.putIfAbsent(
             genre.genre,
-            () => GenreApiService.fetchBooksByGenre(genre.genre),
+            () => BookApiService.fetchBooksByGenre(genre.genre),
           );
 
           return Padding(
