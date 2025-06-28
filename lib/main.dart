@@ -64,7 +64,19 @@ class _SessionCheckerState extends State<SessionChecker> {
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
-      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+      return Scaffold(
+        backgroundColor: Colors.white,
+        body: Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Image.asset('assets/icon/app_icon.png', width: 120, height: 120),
+              const SizedBox(height: 24),
+              const CircularProgressIndicator(color: Color(0xfff8c9d3)),
+            ],
+          ),
+        ),
+      );
     }
 
     return _isLoggedIn ? const HomePage() : const SignInPage();
