@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:crop_your_image/crop_your_image.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:mime/mime.dart';
 
 class CropImagePage extends StatefulWidget {
   final File imageFile;
@@ -27,6 +28,14 @@ class _CropImagePageState extends State<CropImagePage> {
     });
   }
 
+  void _showLoadingDialog() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => const Center(child: CircularProgressIndicator()),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -49,8 +58,39 @@ class _CropImagePageState extends State<CropImagePage> {
                     onCropped: (Uint8List croppedBytes) async {
                       final tempDir = await getTemporaryDirectory();
                       final file = File('${tempDir.path}/cropped.jpg');
-                      await file.writeAsBytes(croppedBytes);
-                      if (context.mounted) Navigator.pop(context, file);
+                      await file.writeAsBytes(croppedBytes, flush: true);
+
+                      final fileSize = await file.length();
+                      if (fileSize > 10 * 1024 * 1024) {
+                        if (context.mounted) {
+                          Navigator.pop(context);
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Maximum file size is 10MB'),
+                            ),
+                          );
+                        }
+                        return;
+                      }
+
+                      final mimeType =
+                          lookupMimeType(file.path) ?? 'image/jpeg';
+                      if (!mimeType.startsWith('image/')) {
+                        if (context.mounted) {
+                          Navigator.pop(context);
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('Tipe file tidak valid: $mimeType'),
+                            ),
+                          );
+                        }
+                        return;
+                      }
+
+                      if (context.mounted) {
+                        Navigator.pop(context);
+                        Navigator.pop(context, file);
+                      }
                     },
                     aspectRatio: 1,
                     withCircleUi: false,
@@ -62,9 +102,12 @@ class _CropImagePageState extends State<CropImagePage> {
                 Padding(
                   padding: const EdgeInsets.only(top: 8, bottom: 22),
                   child: ElevatedButton.icon(
-                    onPressed: () => _controller.crop(),
+                    onPressed: () {
+                      _showLoadingDialog();
+                      _controller.crop();
+                    },
                     icon: const Icon(Icons.check, color: Colors.white),
-                    label: Text(
+                    label: const Text(
                       'Save',
                       style: TextStyle(
                         fontSize: 16,
