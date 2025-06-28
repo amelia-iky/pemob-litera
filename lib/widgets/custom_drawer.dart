@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../pages/book_favorite_pages.dart';
 import '../models/user_models.dart';
 import '../pages/profile_pages.dart';
 
@@ -133,9 +134,16 @@ class CustomDrawer extends StatelessWidget {
                     }
                   },
                 ),
-                const ListTile(
-                  leading: Icon(Icons.favorite),
-                  title: Text('Favorite'),
+                ListTile(
+                  leading: const Icon(Icons.favorite),
+                  title: const Text('Favorite'),
+                  onTap: () {
+                    Navigator.pop(context); // tutup drawer dulu
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const FavoritePage()),
+                    );
+                  },
                 ),
                 const ListTile(
                   leading: Icon(Icons.bookmark),
