@@ -120,7 +120,6 @@ class _FavoritePageState extends State<FavoritePage> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              // Title
                               Text(
                                 book['title'] ?? 'No Title',
                                 style: const TextStyle(
@@ -128,40 +127,38 @@ class _FavoritePageState extends State<FavoritePage> {
                                   fontSize: 16,
                                 ),
                               ),
-                              const SizedBox(height: 3),
-
-                              // Author
                               Text(
                                 book['author'] ?? '',
                                 style: const TextStyle(fontSize: 13),
                               ),
-
-                              // Tags
                               if (tags.isNotEmpty) ...[
-                                const SizedBox(height: 3),
+                                const SizedBox(height: 4),
                                 Wrap(
                                   spacing: 4,
                                   runSpacing: 2,
-                                  children: tags.take(2).map((tag) {
-                                    return Chip(
-                                      label: Text(
-                                        tag.toString(),
-                                        style: const TextStyle(
-                                          fontSize: 10,
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                      backgroundColor:
-                                          Colors.pinkAccent.shade100,
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 6,
-                                        vertical: 0,
-                                      ),
-                                      materialTapTargetSize:
-                                          MaterialTapTargetSize.shrinkWrap,
-                                      visualDensity: VisualDensity.compact,
-                                    );
-                                  }).toList(),
+                                  children: tags
+                                      .take(2) // hanya 2 tag
+                                      .map((tag) {
+                                        return Chip(
+                                          label: Text(
+                                            tag.toString(),
+                                            style: const TextStyle(
+                                              fontSize: 10,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                          backgroundColor:
+                                              Colors.pinkAccent.shade100,
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: 6,
+                                            vertical: 0,
+                                          ),
+                                          materialTapTargetSize:
+                                              MaterialTapTargetSize.shrinkWrap,
+                                          visualDensity: VisualDensity.compact,
+                                        );
+                                      })
+                                      .toList(),
                                 ),
                               ],
                             ],
