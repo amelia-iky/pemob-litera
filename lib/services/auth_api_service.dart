@@ -3,6 +3,8 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthApiService {
+  static const String _baseUrl = 'https://api-litera.vercel.app';
+
   // Signup
   static Future<void> signup({
     required String name,
@@ -10,7 +12,7 @@ class AuthApiService {
     required String email,
     required String password,
   }) async {
-    final url = Uri.parse('https://api-litera.vercel.app/auth/signup');
+    final url = Uri.parse('$_baseUrl/auth/signup');
 
     final response = await http.post(
       url,
@@ -34,7 +36,7 @@ class AuthApiService {
     required String username,
     required String password,
   }) async {
-    final url = Uri.parse('https://api-litera.vercel.app/auth/signin');
+    final url = Uri.parse('$_baseUrl/auth/signin');
     final response = await http.post(
       url,
       headers: {'Content-Type': 'application/json'},
@@ -65,7 +67,7 @@ class AuthApiService {
 
     try {
       final response = await http.get(
-        Uri.parse('https://api-litera.vercel.app/auth/keep-login'),
+        Uri.parse('$_baseUrl/auth/keep-login'),
         headers: {'Authorization': 'Bearer $token'},
       );
 
@@ -87,7 +89,7 @@ class AuthApiService {
     final token = prefs.getString('token');
 
     if (token != null) {
-      final url = Uri.parse('https://api-litera.vercel.app/auth/signout');
+      final url = Uri.parse('$_baseUrl/auth/signout');
       final response = await http.post(
         url,
         headers: {
