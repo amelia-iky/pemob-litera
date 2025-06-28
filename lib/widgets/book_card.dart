@@ -1,25 +1,100 @@
 import 'package:flutter/material.dart';
 import '../models/book_models.dart';
 import '../pages/book_detail_pages.dart';
+import '../services/user_api_service.dart';
 
 class BookCard extends StatefulWidget {
   final Book book;
+  final bool isFavorite;
+  final VoidCallback? onFavoriteToggled;
 
-  const BookCard({super.key, required this.book});
+  const BookCard({
+    super.key,
+    required this.book,
+    this.isFavorite = false,
+    this.onFavoriteToggled,
+  });
 
   @override
   State<BookCard> createState() => _BookCardState();
 }
 
 class _BookCardState extends State<BookCard> {
-  bool isFavorited = false;
+  late bool isFavorited;
+  String? favoriteId;
   bool isSaved = false;
+
+  @override
+  void initState() {
+    super.initState();
+    isFavorited = widget.isFavorite;
+    _fetchFavoriteId();
+  }
+
+  Future<void> _fetchFavoriteId() async {
+    try {
+      final favorites = await UserApiService.getFavorites();
+      final match = favorites.firstWhere(
+        (item) => item['bookId'] == widget.book.id,
+        orElse: () => null,
+      );
+
+      if (mounted && match != null) {
+        setState(() {
+          favoriteId = match['id'];
+        });
+      }
+    } catch (e) {
+      debugPrint('Error fetching favorite ID: $e');
+    }
+  }
+
+  Future<void> _toggleFavorite() async {
+    try {
+      if (isFavorited) {
+        if (favoriteId != null) {
+          await UserApiService.deleteFavorite(favoriteId!);
+          setState(() {
+            isFavorited = false;
+            favoriteId = null;
+          });
+        }
+      } else {
+        final id = await UserApiService.addFavorite(
+          bookId: widget.book.id,
+          title: widget.book.title,
+          author: widget.book.author,
+          tags: widget.book.tags.map((tag) => tag.name).toList(),
+          coverImage: widget.book.coverImage,
+        );
+        setState(() {
+          isFavorited = true;
+          favoriteId = id;
+        });
+      }
+
+      if (widget.onFavoriteToggled != null) {
+        widget.onFavoriteToggled!();
+      }
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            isFavorited ? 'Added to favorites' : 'Removed from favorites',
+          ),
+        ),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Failed to toggle favorite: $e')));
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        // Navigate to detail page
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -40,7 +115,6 @@ class _BookCardState extends State<BookCard> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Book Cover
                   ClipRRect(
                     borderRadius: BorderRadius.circular(12),
                     child: Image.network(
@@ -50,7 +124,6 @@ class _BookCardState extends State<BookCard> {
                       fit: BoxFit.cover,
                       height: 150,
                       width: double.infinity,
-                      // Error handling for image
                       errorBuilder: (context, error, stackTrace) {
                         return Container(
                           height: 150,
@@ -66,8 +139,6 @@ class _BookCardState extends State<BookCard> {
                     ),
                   ),
                   const SizedBox(height: 8),
-
-                  // Title
                   Text(
                     widget.book.title,
                     maxLines: 2,
@@ -78,8 +149,6 @@ class _BookCardState extends State<BookCard> {
                     ),
                   ),
                   const SizedBox(height: 4),
-
-                  // Author
                   Text(
                     widget.book.author,
                     maxLines: 1,
@@ -87,8 +156,6 @@ class _BookCardState extends State<BookCard> {
                     style: const TextStyle(fontSize: 14, color: Colors.black54),
                   ),
                   const SizedBox(height: 4),
-
-                  // Price
                   Text(
                     widget.book.price,
                     style: const TextStyle(
@@ -101,19 +168,13 @@ class _BookCardState extends State<BookCard> {
                 ],
               ),
             ),
-
-            // Favorited and Saved
             Positioned(
               bottom: 8,
               right: 8,
               child: Row(
                 children: [
                   GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        isFavorited = !isFavorited;
-                      });
-                    },
+                    onTap: _toggleFavorite,
                     child: Icon(
                       isFavorited ? Icons.favorite : Icons.favorite_border,
                       color: isFavorited ? Colors.red : Colors.grey,
@@ -125,6 +186,11 @@ class _BookCardState extends State<BookCard> {
                       setState(() {
                         isSaved = !isSaved;
                       });
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(isSaved ? 'Disimpan' : 'Dibatalkan'),
+                        ),
+                      );
                     },
                     child: Icon(
                       isSaved ? Icons.bookmark : Icons.bookmark_border,
