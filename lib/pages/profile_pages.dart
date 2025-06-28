@@ -9,6 +9,7 @@ import 'crop_photo_pages.dart';
 import '../models/user_models.dart';
 import '../services/auth_api_service.dart';
 import '../services/user_api_service.dart';
+import '../widgets/profile_form.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -39,7 +40,6 @@ class _ProfilePageState extends State<ProfilePage> {
     _loadUserProfile();
   }
 
-  // Function load user profile
   Future<void> _loadUserProfile() async {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('token');
@@ -71,9 +71,7 @@ class _ProfilePageState extends State<ProfilePage> {
     }
   }
 
-  // Function update profile
   Future<void> _updateProfile() async {
-    // Loading
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -106,7 +104,6 @@ class _ProfilePageState extends State<ProfilePage> {
     }
   }
 
-  // Function signout
   Future<void> _signout() async {
     showDialog(
       context: context,
@@ -118,8 +115,6 @@ class _ProfilePageState extends State<ProfilePage> {
       await AuthApiService.signout();
       if (context.mounted) {
         _showSnackBar('Signout Successfully', Colors.green);
-
-        // Redirect to login pages
         Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(builder: (_) => const SignInPage()),
@@ -132,7 +127,6 @@ class _ProfilePageState extends State<ProfilePage> {
     }
   }
 
-  // Function show image source
   void _showImageSourceDialog() {
     showModalBottomSheet(
       context: context,
@@ -162,7 +156,6 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  // Function crop image
   Future<File?> _cropImage(String imagePath) async {
     final croppedFile = await Navigator.push<File?>(
       context,
@@ -173,7 +166,6 @@ class _ProfilePageState extends State<ProfilePage> {
     return croppedFile;
   }
 
-  // Function pick image
   Future<void> _pickImage(ImageSource source) async {
     if (await Permission.camera.request().isDenied ||
         (Platform.isAndroid && await Permission.photos.request().isDenied)) {
@@ -194,7 +186,6 @@ class _ProfilePageState extends State<ProfilePage> {
     }
   }
 
-  // Pop up snackbar
   void _showSnackBar(String message, Color color) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -282,111 +273,38 @@ class _ProfilePageState extends State<ProfilePage> {
       ),
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(24.0),
+          padding: const EdgeInsets.only(
+            top: 24,
+            bottom: 10,
+            left: 24,
+            right: 24,
+          ),
           child: Column(
             children: [
               Expanded(
                 child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      _buildProfileImage(),
-                      const SizedBox(height: 24),
-
-                      // Name
-                      TextFormField(
-                        controller: _nameController,
-                        readOnly: !_isEditing,
-                        decoration: InputDecoration(
-                          labelText: 'Name',
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-
-                      // Username
-                      TextFormField(
-                        initialValue: _user!.username,
-                        readOnly: true,
-                        decoration: InputDecoration(
-                          labelText: 'Username',
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-
-                      // Email
-                      TextFormField(
-                        controller: _emailController,
-                        readOnly: !_isEditing,
-                        decoration: InputDecoration(
-                          labelText: 'Email',
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-
-                      // Old Password
-                      if (_isEditing) ...[
-                        TextFormField(
-                          controller: _oldPasswordController,
-                          obscureText: !_showOldPassword,
-                          decoration: InputDecoration(
-                            labelText: 'Old Password',
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            suffixIcon: IconButton(
-                              icon: Icon(
-                                _showOldPassword
-                                    ? Icons.visibility_off
-                                    : Icons.visibility,
-                              ),
-                              onPressed: () {
-                                setState(
-                                  () => _showOldPassword = !_showOldPassword,
-                                );
-                              },
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 16),
-
-                        // New Password
-                        TextFormField(
-                          controller: _newPasswordController,
-                          obscureText: !_showNewPassword,
-                          decoration: InputDecoration(
-                            labelText: 'New Password',
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            suffixIcon: IconButton(
-                              icon: Icon(
-                                _showNewPassword
-                                    ? Icons.visibility_off
-                                    : Icons.visibility,
-                              ),
-                              onPressed: () {
-                                setState(
-                                  () => _showNewPassword = !_showNewPassword,
-                                );
-                              },
-                            ),
-                          ),
-                        ),
-                      ],
-                    ],
+                  child: ProfileForm(
+                    user: _user!,
+                    isEditing: _isEditing,
+                    selectedImage: _selectedImage,
+                    nameController: _nameController,
+                    emailController: _emailController,
+                    oldPasswordController: _oldPasswordController,
+                    newPasswordController: _newPasswordController,
+                    showOldPassword: _showOldPassword,
+                    showNewPassword: _showNewPassword,
+                    onToggleOldPassword: () => setState(() {
+                      _showOldPassword = !_showOldPassword;
+                    }),
+                    onToggleNewPassword: () => setState(() {
+                      _showNewPassword = !_showNewPassword;
+                    }),
+                    onTapImage: _showImageSourceDialog,
+                    buildProfileImage: _buildProfileImage,
                   ),
                 ),
               ),
               const SizedBox(height: 16),
-              // Tombol save / signout tetap di bawah
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton.icon(
