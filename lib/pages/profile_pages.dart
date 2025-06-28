@@ -1,12 +1,14 @@
-import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../models/user_models.dart';
-import '../services/user_api_services.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'signin_pages.dart';
+import 'profile_photo_pages.dart';
+import 'crop_photo_pages.dart';
+import '../models/user_models.dart';
+import '../services/auth_api_service.dart';
+import '../services/user_api_service.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -23,6 +25,11 @@ class _ProfilePageState extends State<ProfilePage> {
 
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
+  final _oldPasswordController = TextEditingController();
+  final _newPasswordController = TextEditingController();
+
+  bool _showOldPassword = false;
+  bool _showNewPassword = false;
 
   File? _selectedImage;
 
@@ -32,7 +39,22 @@ class _ProfilePageState extends State<ProfilePage> {
     _loadUserProfile();
   }
 
+  // Function load user profile
   Future<void> _loadUserProfile() async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token');
+
+    if (token == null) {
+      if (context.mounted) {
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (_) => const SignInPage()),
+          (route) => false,
+        );
+      }
+      return;
+    }
+
     try {
       final user = await UserApiService.fetchUserProfile();
       setState(() {
@@ -49,70 +71,130 @@ class _ProfilePageState extends State<ProfilePage> {
     }
   }
 
+  // Function update profile
   Future<void> _updateProfile() async {
-    final prefs = await SharedPreferences.getInstance();
-    final token = prefs.getString('token');
+    // Loading
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => const Center(child: CircularProgressIndicator()),
+    );
 
-    if (token == null) {
-      _showSnackBar('Token tidak ditemukan.', Colors.red);
+    try {
+      final message = await UserApiService.updateUserProfile(
+        name: _nameController.text.trim(),
+        email: _emailController.text.trim(),
+        oldPassword: _oldPasswordController.text.trim().isEmpty
+            ? null
+            : _oldPasswordController.text.trim(),
+        newPassword: _newPasswordController.text.trim().isEmpty
+            ? null
+            : _newPasswordController.text.trim(),
+        profileImage: _selectedImage,
+      );
+
+      Navigator.pop(context, true);
+      _showSnackBar(message, Colors.green);
+      setState(() {
+        _isEditing = false;
+        _selectedImage = null;
+      });
+      await _loadUserProfile();
+    } catch (e) {
+      if (context.mounted) Navigator.pop(context);
+      _showSnackBar('Failed to update profile: $e', Colors.red);
+    }
+  }
+
+  // Function signout
+  Future<void> _signout() async {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => const Center(child: CircularProgressIndicator()),
+    );
+
+    try {
+      await AuthApiService.signout();
+      if (context.mounted) {
+        _showSnackBar('Signout Successfully', Colors.green);
+
+        // Redirect to login pages
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (_) => const SignInPage()),
+          (route) => false,
+        );
+      }
+    } catch (e) {
+      if (context.mounted) Navigator.pop(context);
+      _showSnackBar('Failed to signout: $e', Colors.red);
+    }
+  }
+
+  // Function show image source
+  void _showImageSourceDialog() {
+    showModalBottomSheet(
+      context: context,
+      builder: (_) => Padding(
+        padding: const EdgeInsets.only(bottom: 22),
+        child: Wrap(
+          children: [
+            ListTile(
+              leading: const Icon(Icons.camera_alt),
+              title: const Text('Open Camera'),
+              onTap: () {
+                Navigator.pop(context);
+                _pickImage(ImageSource.camera);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.photo),
+              title: const Text('Open Gallery'),
+              onTap: () {
+                Navigator.pop(context);
+                _pickImage(ImageSource.gallery);
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // Function crop image
+  Future<File?> _cropImage(String imagePath) async {
+    final croppedFile = await Navigator.push<File?>(
+      context,
+      MaterialPageRoute(
+        builder: (_) => CropImagePage(imageFile: File(imagePath)),
+      ),
+    );
+    return croppedFile;
+  }
+
+  // Function pick image
+  Future<void> _pickImage(ImageSource source) async {
+    if (await Permission.camera.request().isDenied ||
+        (Platform.isAndroid && await Permission.photos.request().isDenied)) {
+      _showSnackBar("Permission Denied", Colors.red);
       return;
     }
 
-    try {
-      final response = await http.put(
-        Uri.parse('https://api-litera.vercel.app/user/profile-update'),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $token',
-        },
-        body: jsonEncode({
-          'name': _nameController.text.trim(),
-          'email': _emailController.text.trim(),
-        }),
-      );
-
-      if (response.statusCode == 200) {
-        _showSnackBar('Profil berhasil diperbarui!', Colors.green);
-        if (context.mounted) {
-          Navigator.pop(context, true);
-        }
-      } else {
-        final msg =
-            jsonDecode(response.body)['message'] ?? 'Gagal memperbarui profil.';
-        _showSnackBar(msg, Colors.red);
-      }
-    } catch (e) {
-      _showSnackBar('Terjadi kesalahan: $e', Colors.red);
-    }
-  }
-
-  Future<void> _logout() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.remove('token');
-    if (context.mounted) {
-      Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(builder: (_) => const SigninPage()),
-        (route) => false,
-      );
-    }
-  }
-
-  Future<void> _pickImage() async {
     final picker = ImagePicker();
-    final pickedFile = await picker.pickImage(
-      source: ImageSource.gallery,
-      imageQuality: 80,
-    );
+    final pickedFile = await picker.pickImage(source: source, imageQuality: 50);
 
     if (pickedFile != null) {
-      setState(() => _selectedImage = File(pickedFile.path));
-      _showSnackBar('Gambar siap diunggah (simulasi).', Colors.grey);
-
-      // TODO: Integrasikan dengan upload API jika tersedia
+      final croppedImage = await _cropImage(pickedFile.path);
+      if (croppedImage != null) {
+        setState(() => _selectedImage = croppedImage);
+      } else {
+        _showSnackBar('Canceled to crop image', Colors.orange);
+      }
     }
   }
 
+  // Pop up snackbar
   void _showSnackBar(String message, Color color) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -130,31 +212,43 @@ class _ProfilePageState extends State<ProfilePage> {
         ? _user!.profileImages.first.url
         : null;
 
-    return Stack(
-      alignment: Alignment.bottomRight,
-      children: [
-        CircleAvatar(
-          radius: 70,
-          backgroundImage: _selectedImage != null
-              ? FileImage(_selectedImage!)
-              : (imageUrl != null ? NetworkImage(imageUrl) : null)
-                    as ImageProvider?,
-          backgroundColor: Colors.grey[300],
-          child: imageUrl == null && _selectedImage == null
-              ? const Icon(Icons.person, size: 70, color: Colors.white)
-              : null,
-        ),
-        if (_isEditing)
+    return GestureDetector(
+      onTap: !_isEditing && imageUrl != null
+          ? () => _openFullImage(imageUrl)
+          : null,
+      child: Stack(
+        alignment: Alignment.bottomRight,
+        children: [
           CircleAvatar(
-            radius: 18,
-            backgroundColor: Colors.white,
-            child: IconButton(
-              icon: const Icon(Icons.edit, size: 18),
-              onPressed: _pickImage,
-              tooltip: 'Ubah foto profil',
-            ),
+            radius: 70,
+            backgroundImage: _selectedImage != null
+                ? FileImage(_selectedImage!)
+                : (imageUrl != null ? NetworkImage(imageUrl) : null)
+                      as ImageProvider?,
+            backgroundColor: Colors.grey[300],
+            child: imageUrl == null && _selectedImage == null
+                ? const Icon(Icons.person, size: 70, color: Colors.white)
+                : null,
           ),
-      ],
+          if (_isEditing)
+            CircleAvatar(
+              radius: 18,
+              backgroundColor: Colors.white,
+              child: IconButton(
+                icon: const Icon(Icons.edit, size: 18),
+                onPressed: _showImageSourceDialog,
+                tooltip: 'Change Photo Profile',
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+
+  void _openFullImage(String imageUrl) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => FullImagePage(imageUrl: imageUrl)),
     );
   }
 
@@ -173,86 +267,153 @@ class _ProfilePageState extends State<ProfilePage> {
         centerTitle: true,
         title: const Text(
           'Profile',
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          style: TextStyle(fontSize: 22, fontWeight: FontWeight.w800),
         ),
         backgroundColor: const Color(0xfff8c9d3),
         actions: [
           IconButton(
             icon: Icon(_isEditing ? Icons.close : Icons.edit_outlined),
-            tooltip: _isEditing ? 'Batal' : 'Edit Profil',
+            tooltip: _isEditing ? 'Cancel' : 'Edit Profil',
             onPressed: () {
               setState(() => _isEditing = !_isEditing);
             },
           ),
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(24.0),
-        child: Column(
-          children: [
-            _buildProfileImage(),
-            const SizedBox(height: 24),
-            TextFormField(
-              controller: _nameController,
-              readOnly: !_isEditing,
-              decoration: InputDecoration(
-                labelText: 'Nama',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(24.0),
+          child: Column(
+            children: [
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      _buildProfileImage(),
+                      const SizedBox(height: 24),
+
+                      // Name
+                      TextFormField(
+                        controller: _nameController,
+                        readOnly: !_isEditing,
+                        decoration: InputDecoration(
+                          labelText: 'Name',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+
+                      // Username
+                      TextFormField(
+                        initialValue: _user!.username,
+                        readOnly: true,
+                        decoration: InputDecoration(
+                          labelText: 'Username',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+
+                      // Email
+                      TextFormField(
+                        controller: _emailController,
+                        readOnly: !_isEditing,
+                        decoration: InputDecoration(
+                          labelText: 'Email',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+
+                      // Old Password
+                      if (_isEditing) ...[
+                        TextFormField(
+                          controller: _oldPasswordController,
+                          obscureText: !_showOldPassword,
+                          decoration: InputDecoration(
+                            labelText: 'Old Password',
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            suffixIcon: IconButton(
+                              icon: Icon(
+                                _showOldPassword
+                                    ? Icons.visibility_off
+                                    : Icons.visibility,
+                              ),
+                              onPressed: () {
+                                setState(
+                                  () => _showOldPassword = !_showOldPassword,
+                                );
+                              },
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+
+                        // New Password
+                        TextFormField(
+                          controller: _newPasswordController,
+                          obscureText: !_showNewPassword,
+                          decoration: InputDecoration(
+                            labelText: 'New Password',
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            suffixIcon: IconButton(
+                              icon: Icon(
+                                _showNewPassword
+                                    ? Icons.visibility_off
+                                    : Icons.visibility,
+                              ),
+                              onPressed: () {
+                                setState(
+                                  () => _showNewPassword = !_showNewPassword,
+                                );
+                              },
+                            ),
+                          ),
+                        ),
+                      ],
+                    ],
+                  ),
                 ),
               ),
-            ),
-            const SizedBox(height: 16),
-            TextFormField(
-              initialValue: _user!.username,
-              readOnly: true,
-              decoration: InputDecoration(
-                labelText: 'Username',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
-            ),
-            const SizedBox(height: 16),
-            TextFormField(
-              controller: _emailController,
-              readOnly: !_isEditing,
-              decoration: InputDecoration(
-                labelText: 'Email',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
-            ),
-            const Spacer(),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton.icon(
-                onPressed: _isEditing ? _updateProfile : _logout,
-                icon: Icon(
-                  _isEditing ? Icons.save : Icons.logout,
-                  color: Colors.white,
-                ),
-                label: Text(
-                  _isEditing ? 'Simpan Perubahan' : 'Logout',
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
+              const SizedBox(height: 16),
+              // Tombol save / signout tetap di bawah
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton.icon(
+                  onPressed: _isEditing ? _updateProfile : _signout,
+                  icon: Icon(
+                    _isEditing ? Icons.save : Icons.logout,
                     color: Colors.white,
                   ),
-                ),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: _isEditing
-                      ? Colors.pinkAccent.shade200
-                      : Colors.pinkAccent.shade200,
-                  padding: const EdgeInsets.symmetric(vertical: 14),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
+                  label: Text(
+                    _isEditing ? 'Save' : 'SignOut',
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.pinkAccent.shade200,
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
