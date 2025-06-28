@@ -171,4 +171,82 @@ class UserApiService {
       throw Exception(msg);
     }
   }
+
+  // Add saved book
+  static Future<String> addSaved({
+    required String bookId,
+    required String title,
+    required String author,
+    required String price,
+    required String coverImage,
+  }) async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token');
+
+    if (token == null) throw Exception('Token not found');
+
+    final url = Uri.parse('$_baseUrl/book/save');
+    final response = await http.post(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+      body: jsonEncode({
+        'bookId': bookId,
+        'title': title,
+        'author': author,
+        'price': price,
+        'coverImage': coverImage,
+      }),
+    );
+
+    if (response.statusCode == 201) {
+      final data = jsonDecode(response.body);
+      return data['data']['id'];
+    } else {
+      final msg = jsonDecode(response.body)['message'] ?? 'Failed to save book';
+      throw Exception(msg);
+    }
+  }
+
+  // Get saved books
+  static Future<List<dynamic>> getSaved() async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token');
+
+    if (token == null) throw Exception('Token not found');
+
+    final url = Uri.parse('$_baseUrl/book/save');
+    final response = await http.get(
+      url,
+      headers: {'Authorization': 'Bearer $token'},
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      return data['data'];
+    } else {
+      throw Exception('Failed to get saved books');
+    }
+  }
+
+  // Delete saved book
+  static Future<void> deleteSaved(String id) async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token');
+
+    if (token == null) throw Exception('Token not found');
+
+    final url = Uri.parse('$_baseUrl/book/save/$id');
+    final response = await http.delete(
+      url,
+      headers: {'Authorization': 'Bearer $token'},
+    );
+
+    if (response.statusCode != 200) {
+      final msg = jsonDecode(response.body)['message'] ?? 'Failed to delete';
+      throw Exception(msg);
+    }
+  }
 }
