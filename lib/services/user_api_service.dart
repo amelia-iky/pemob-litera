@@ -7,13 +7,16 @@ import 'package:mime/mime.dart';
 import '../models/user_models.dart';
 
 class UserApiService {
+  static const String _baseUrl = 'https://api-litera.vercel.app';
+
+  // Fetch user profile
   static Future<UserProfile> fetchUserProfile() async {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('token');
 
     if (token == null) throw Exception('Token not found');
 
-    final url = Uri.parse('https://api-litera.vercel.app/user/profile');
+    final url = Uri.parse('$_baseUrl/user/profile');
     final response = await http.get(
       url,
       headers: {'Authorization': 'Bearer $token'},
@@ -29,6 +32,7 @@ class UserApiService {
     }
   }
 
+  // Update user profile
   static Future<String> updateUserProfile({
     required String name,
     required String email,
@@ -41,7 +45,7 @@ class UserApiService {
 
     if (token == null) throw Exception('Token not found');
 
-    final url = Uri.parse('https://api-litera.vercel.app/user/profile-update');
+    final url = Uri.parse('$_baseUrl/user/profile-update');
 
     final request = http.MultipartRequest('PUT', url)
       ..headers['Authorization'] = 'Bearer $token'
@@ -85,6 +89,83 @@ class UserApiService {
     } else {
       final msg =
           jsonDecode(response.body)['message'] ?? 'Failed to update profile';
+      throw Exception(msg);
+    }
+  }
+
+  // Add favorite book
+  static Future<String> addFavorite({
+    required String bookId,
+    required String title,
+    required String author,
+    required String coverImage,
+  }) async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token');
+
+    if (token == null) throw Exception('Token not found');
+
+    final url = Uri.parse('$_baseUrl/book/favorite');
+    final response = await http.post(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+      body: jsonEncode({
+        'bookId': bookId,
+        'title': title,
+        'author': author,
+        'coverImage': coverImage,
+      }),
+    );
+
+    if (response.statusCode == 201) {
+      final data = jsonDecode(response.body);
+      return data['favorite']['id'];
+    } else {
+      final msg =
+          jsonDecode(response.body)['message'] ?? 'Failed to add favorite';
+      throw Exception(msg);
+    }
+  }
+
+  // Get favorite books
+  static Future<List<dynamic>> getFavorites() async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token');
+
+    if (token == null) throw Exception('Token not found');
+
+    final url = Uri.parse('$_baseUrl/book/favorite');
+    final response = await http.get(
+      url,
+      headers: {'Authorization': 'Bearer $token'},
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      return data['favorites'];
+    } else {
+      throw Exception('Failed to get favorites');
+    }
+  }
+
+  // Delete favorite book
+  static Future<void> deleteFavorite(String id) async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token');
+
+    if (token == null) throw Exception('Token not found');
+
+    final url = Uri.parse('$_baseUrl/book/favorite/$id');
+    final response = await http.delete(
+      url,
+      headers: {'Authorization': 'Bearer $token'},
+    );
+
+    if (response.statusCode != 200) {
+      final msg = jsonDecode(response.body)['message'] ?? 'Failed to delete';
       throw Exception(msg);
     }
   }
