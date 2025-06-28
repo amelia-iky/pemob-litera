@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http_parser/http_parser.dart';
+import 'package:mime/mime.dart';
 import '../models/user_models.dart';
 
 class UserApiService {
@@ -30,6 +32,8 @@ class UserApiService {
   static Future<String> updateUserProfile({
     required String name,
     required String email,
+    String? oldPassword,
+    String? newPassword,
     File? profileImage,
   }) async {
     final prefs = await SharedPreferences.getInstance();
@@ -44,9 +48,21 @@ class UserApiService {
       ..fields['name'] = name
       ..fields['email'] = email;
 
+    // Add oldPassword and newPassword if provided
+    if (oldPassword != null && oldPassword.isNotEmpty) {
+      request.fields['oldPassword'] = oldPassword;
+    }
+
+    if (newPassword != null && newPassword.isNotEmpty) {
+      request.fields['password'] = newPassword;
+    }
+
     if (profileImage != null) {
       final fileStream = http.ByteStream(profileImage.openRead());
       final length = await profileImage.length();
+
+      final mimeType = lookupMimeType(profileImage.path) ?? 'image/jpeg';
+      final mediaType = MediaType.parse(mimeType);
 
       request.files.add(
         http.MultipartFile(
@@ -54,6 +70,7 @@ class UserApiService {
           fileStream,
           length,
           filename: profileImage.path.split('/').last,
+          contentType: mediaType,
         ),
       );
     }
