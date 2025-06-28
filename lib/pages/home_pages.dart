@@ -27,6 +27,10 @@ class _HomePageState extends State<HomePage> {
   int currentPage = 0;
   final int genresPerPage = 5;
 
+  // Favorites
+  Set<String> _favoriteBookIds = {};
+  late Future<void> _initData;
+
   Future<UserProfile> _fetchUserProfile() {
     return UserApiService.fetchUserProfile();
   }
@@ -34,7 +38,33 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    _initData = _fetchInitialData();
+  }
+
+  Future<void> _fetchInitialData() async {
     _genreFuture = BookApiService.fetchGenreStats();
+    try {
+      final favorites = await UserApiService.getFavorites();
+      _favoriteBookIds = favorites
+          .map<String>((f) => f['bookId'] as String)
+          .toSet();
+    } catch (e) {
+      debugPrint('Failed to fetch favorites: $e');
+      _favoriteBookIds = {};
+    }
+  }
+
+  void _refreshFavorites() async {
+    try {
+      final favorites = await UserApiService.getFavorites();
+      setState(() {
+        _favoriteBookIds = favorites
+            .map<String>((f) => f['bookId'] as String)
+            .toSet();
+      });
+    } catch (e) {
+      debugPrint('Failed to refresh favorites: $e');
+    }
   }
 
   void _performSearch(String query) {
@@ -66,122 +96,117 @@ class _HomePageState extends State<HomePage> {
       drawer: CustomDrawer(
         fetchUserProfile: _fetchUserProfile,
         onProfileUpdated: () {
-          setState(() {
-            // _fetchUserProfile = UserApiService.fetchUserProfile();
-          });
+          setState(() {});
         },
       ),
-      body: Column(
-        children: [
-          // Search Bar
-          BookSearch(
-            controller: _searchController,
-            onSearch: _performSearch,
-            onClear: () {
-              _searchController.clear();
-              _performSearch('');
-            },
-          ),
-          Expanded(
-            child: _isSearching && _searchResults != null
-                ? FutureBuilder<List<Book>>(
-                    future: _searchResults,
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return const Center(child: CircularProgressIndicator());
-                      } else if (snapshot.hasError) {
-                        return Center(child: Text('Error: ${snapshot.error}'));
-                      } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                        return const Center(child: Text('No books found.'));
-                      }
+      body: FutureBuilder<void>(
+        future: _initData,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error loading data: ${snapshot.error}'));
+          }
 
-                      final books = snapshot.data!
-                          .where((b) => b.coverImage.isNotEmpty)
-                          .toList();
+          return Column(
+            children: [
+              // Search Bar
+              BookSearch(
+                controller: _searchController,
+                onSearch: _performSearch,
+                onClear: () {
+                  _searchController.clear();
+                  _performSearch('');
+                },
+              ),
+              Expanded(
+                child: _isSearching && _searchResults != null
+                    ? FutureBuilder<List<Book>>(
+                        future: _searchResults,
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          } else if (snapshot.hasError) {
+                            return Center(
+                              child: Text('Error: ${snapshot.error}'),
+                            );
+                          } else if (!snapshot.hasData ||
+                              snapshot.data!.isEmpty) {
+                            return const Center(child: Text('No books found.'));
+                          }
 
-                      return GridView.builder(
-                        padding: const EdgeInsets.all(8),
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2,
-                              childAspectRatio: 0.6,
-                              crossAxisSpacing: 8,
-                              mainAxisSpacing: 8,
-                            ),
-                        itemCount: books.length,
-                        itemBuilder: (context, i) {
-                          return BookCard(book: books[i]);
+                          final books = snapshot.data!
+                              .where((b) => b.coverImage.isNotEmpty)
+                              .toList();
+
+                          return GridView.builder(
+                            padding: const EdgeInsets.all(8),
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 2,
+                                  childAspectRatio: 0.6,
+                                  crossAxisSpacing: 8,
+                                  mainAxisSpacing: 8,
+                                ),
+                            itemCount: books.length,
+                            itemBuilder: (context, i) {
+                              final book = books[i];
+                              return BookCard(
+                                book: book,
+                                isFavorite: _favoriteBookIds.contains(book.id),
+                                onFavoriteToggled: _refreshFavorites,
+                              );
+                            },
+                          );
                         },
-                      );
-                    },
-                  )
-                : FutureBuilder<List<GenreStat>>(
-                    future: _genreFuture,
-                    builder: (context, genreSnapshot) {
-                      if (genreSnapshot.connectionState ==
-                          ConnectionState.waiting) {
-                        return const Center(child: CircularProgressIndicator());
-                      } else if (genreSnapshot.hasError) {
-                        return Center(
-                          child: Text('Error: ${genreSnapshot.error}'),
-                        );
-                      } else if (!genreSnapshot.hasData ||
-                          genreSnapshot.data!.isEmpty) {
-                        return const Center(child: Text('No genres found.'));
-                      }
+                      )
+                    : FutureBuilder<List<GenreStat>>(
+                        future: _genreFuture,
+                        builder: (context, genreSnapshot) {
+                          if (genreSnapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          } else if (genreSnapshot.hasError) {
+                            return Center(
+                              child: Text('Error: ${genreSnapshot.error}'),
+                            );
+                          } else if (!genreSnapshot.hasData ||
+                              genreSnapshot.data!.isEmpty) {
+                            return const Center(
+                              child: Text('No genres found.'),
+                            );
+                          }
 
-                      return Column(
-                        children: [
-                          Expanded(
-                            child: FutureBuilder<List<GenreStat>>(
-                              future: _genreFuture,
-                              builder: (context, genreSnapshot) {
-                                if (genreSnapshot.connectionState ==
-                                    ConnectionState.waiting) {
-                                  return const Center(
-                                    child: CircularProgressIndicator(),
-                                  );
-                                } else if (genreSnapshot.hasError) {
-                                  return Center(
-                                    child: Text(
-                                      'Error: ${genreSnapshot.error}',
-                                    ),
-                                  );
-                                } else if (!genreSnapshot.hasData ||
-                                    genreSnapshot.data!.isEmpty) {
-                                  return const Center(
-                                    child: Text('No genres found.'),
-                                  );
-                                }
+                          final genres = genreSnapshot.data!;
+                          final totalPages = (genres.length / genresPerPage)
+                              .ceil();
+                          final pagedGenres = genres
+                              .skip(currentPage * genresPerPage)
+                              .take(genresPerPage)
+                              .toList();
 
-                                final genres = genreSnapshot.data!;
-                                final totalPages =
-                                    (genres.length / genresPerPage).ceil();
-                                final pagedGenres = genres
-                                    .skip(currentPage * genresPerPage)
-                                    .take(genresPerPage)
-                                    .toList();
-
-                                // Book Category
-                                return BookCategory(
-                                  pagedGenres: pagedGenres,
-                                  currentPage: currentPage,
-                                  totalPages: totalPages,
-                                  onPrevPage: () =>
-                                      setState(() => currentPage--),
-                                  onNextPage: () =>
-                                      setState(() => currentPage++),
-                                  bookFutures: _bookFutures,
-                                );
-                              },
-                            ),
-                          ),
-                        ],
-                      );
-                    },
-                  ),
-          ),
-        ],
+                          // Book Category
+                          return BookCategory(
+                            pagedGenres: pagedGenres,
+                            currentPage: currentPage,
+                            totalPages: totalPages,
+                            onPrevPage: () => setState(() => currentPage--),
+                            onNextPage: () => setState(() => currentPage++),
+                            bookFutures: _bookFutures,
+                            favoriteBookIds: _favoriteBookIds,
+                            onFavoriteToggled: _refreshFavorites,
+                          );
+                        },
+                      ),
+              ),
+            ],
+          );
+        },
       ),
     );
   }
