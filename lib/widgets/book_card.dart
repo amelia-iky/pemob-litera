@@ -28,25 +28,6 @@ class _BookCardState extends State<BookCard> {
   void initState() {
     super.initState();
     isFavorited = widget.isFavorite;
-    _fetchFavoriteId();
-  }
-
-  Future<void> _fetchFavoriteId() async {
-    try {
-      final favorites = await UserApiService.getFavorites();
-      final match = favorites.firstWhere(
-        (item) => item['bookId'] == widget.book.id,
-        orElse: () => null,
-      );
-
-      if (mounted && match != null) {
-        setState(() {
-          favoriteId = match['id'];
-        });
-      }
-    } catch (e) {
-      debugPrint('Error fetching favorite ID: $e');
-    }
   }
 
   Future<void> _toggleFavorite() async {
@@ -54,11 +35,22 @@ class _BookCardState extends State<BookCard> {
       if (isFavorited) {
         if (favoriteId != null) {
           await UserApiService.deleteFavorite(favoriteId!);
-          setState(() {
-            isFavorited = false;
-            favoriteId = null;
-          });
+        } else {
+          // Fallback: cari berdasarkan bookId kalau memang belum ada favoriteId
+          final favorites = await UserApiService.getFavorites();
+          final match = favorites.firstWhere(
+            (item) => item['bookId'] == widget.book.id,
+            orElse: () => null,
+          );
+          if (match != null) {
+            await UserApiService.deleteFavorite(match['id']);
+          }
         }
+
+        setState(() {
+          isFavorited = false;
+          favoriteId = null;
+        });
       } else {
         final id = await UserApiService.addFavorite(
           bookId: widget.book.id,
@@ -73,6 +65,7 @@ class _BookCardState extends State<BookCard> {
         });
       }
 
+      // Notifikasi ke parent (HomePage) untuk refresh favorites
       if (widget.onFavoriteToggled != null) {
         widget.onFavoriteToggled!();
       }
