@@ -3,12 +3,12 @@ import '../models/user_models.dart';
 import '../pages/profile_pages.dart';
 
 class CustomDrawer extends StatelessWidget {
-  final Future<UserProfile> userProfile;
+  final Future<UserProfile> Function() fetchUserProfile;
   final VoidCallback onProfileUpdated;
 
   const CustomDrawer({
     super.key,
-    required this.userProfile,
+    required this.fetchUserProfile,
     required this.onProfileUpdated,
   });
 
@@ -18,7 +18,7 @@ class CustomDrawer extends StatelessWidget {
       child: Column(
         children: [
           FutureBuilder<UserProfile>(
-            future: userProfile,
+            future: fetchUserProfile(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const SizedBox(
