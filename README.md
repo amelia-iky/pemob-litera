@@ -49,45 +49,45 @@ lib/
 
 <table>
   <tr>
-    <td align="center"><b>Landing Pages</b></td>
-    <td align="center"><b>Pagination</b></td>
+    <td align="center"><b>Home Pages</b></td>
+    <td align="center"><b>Profile Pages</b></td>
   </tr>
   <tr>
     <td align="center">
-      <img src="/public/landing-pages.png" alt="landing-pages" width="400"/>
+      <img src="/public/landing-pages.png" alt="home-pages" width="400"/>
     </td>
     <td align="center">
-      <img src="/public/pagination.png" alt="pagination" width="400"/>
-    </td>
-  </tr>
-</table>
-
-<table>
-  <tr>
-    <td align="center"><b>Form View</b></td>
-    <td align="center"><b>Confirmation Button</b></td>
-  </tr>
-  <tr>
-    <td align="center">
-      <img src="/public/form-view.png" alt="form-view" width="400"/>
-    </td>
-    <td align="center">
-      <img src="/public/confirmation-button.png" alt="confirmation-button" width="400"/>
+      <img src="/public/pagination.png" alt="profile-pages" width="400"/>
     </td>
   </tr>
 </table>
 
 <table>
   <tr>
-    <td align="center"><b>Searching Playlist</b></td>
-    <td align="center"><b>Search Empty Handler</b></td>
+    <td align="center"><b>Favorite Book Pages</b></td>
+    <td align="center"><b>Saved Book Pages</b></td>
   </tr>
   <tr>
     <td align="center">
-      <img src="/public/search-bar.png" alt="search-bar" width="400"/>
+      <img src="/public/form-view.png" alt="favorite-pages" width="400"/>
     </td>
     <td align="center">
-      <img src="/public/null-search.png" alt="null-search" width="400"/>
+      <img src="/public/confirmation-button.png" alt="saved-pages" width="400"/>
+    </td>
+  </tr>
+</table>
+
+<table>
+  <tr>
+    <td align="center"><b>Detail Book Pages</b></td>
+    <td align="center"><b>Search Book Pages</b></td>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="/public/search-bar.png" alt="detail-pages" width="400"/>
+    </td>
+    <td align="center">
+      <img src="/public/null-search.png" alt="search-pages" width="400"/>
     </td>
   </tr>
 </table>
