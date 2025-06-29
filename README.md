@@ -61,45 +61,44 @@ lib/
 
 <table>
   <tr>
-    <td align="center"><b>Home Pages</b></td>
-    <td align="center"><b>Profile Pages</b></td>
+    <td colspan="4" align="center"><b>Main Pages</b></td>
+  </tr>
+  <tr>
+    <td align="center"><b>Home</b></td>
+    <td align="center"><b>Book Detail</b></td>
+    <td align="center"><b>Book Search</b></td>
+    <td align="center"><b>Drawer</b></td>
   </tr>
   <tr>
     <td align="center">
-      <img src='/assets/documentation/home-pages.jpg' alt="home-pages" width="400"/>
+      <img src="/assets/documentation/home-pages.jpg" alt="home-pages" height="200" width="100"/>
     </td>
     <td align="center">
-      <img src='/assets/documentation/profile-pages.jpg' alt="profile-pages" width="400"/>
-    </td>
-  </tr>
-</table>
-
-<table>
-  <tr>
-    <td align="center"><b>Favorite Book Pages</b></td>
-    <td align="center"><b>Saved Book Pages</b></td>
-  </tr>
-  <tr>
-    <td align="center">
-      <img src='' alt="favorite-pages" width="400"/>
+      <img src='/assets/documentation/book-detail.jpg' alt="detail-pages" height="200" width="100"/>
     </td>
     <td align="center">
-      <img src='' alt="saved-pages" width="400"/>
+      <img src='' alt="search-pages" height="200" width="100"/>
+    </td>
+    <td align="center">
+      <img src='/assets/documentation/drawer-pages.jpg' alt="drawer-pages" height="200" width="100"/>
     </td>
   </tr>
 </table>
 
 <table>
   <tr>
-    <td align="center"><b>Detail Book Pages</b></td>
-    <td align="center"><b>Search Book Pages</b></td>
+    <td colspan="2" align="center"><b>User Dashboard</b></td>
+  </tr>
+  <tr>
+    <td align="center"><b>Profile</b></td>
+    <td align="center"><b>Edit Profile</b></td>
   </tr>
   <tr>
     <td align="center">
-      <img src='' alt="detail-pages" width="400"/>
+      <img src="/assets/documentation/profile-pages.jpg" alt="profile-pages" height="200" width="100"/>
     </td>
     <td align="center">
-      <img src='' alt="search-pages" width="400"/>
+      <img src="/assets/documentation/profile-edit.jpg" alt="edit-profile-pages" height="200" width="100"/>
     </td>
   </tr>
 </table>
