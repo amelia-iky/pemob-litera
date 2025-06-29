@@ -28,7 +28,9 @@ class _HomePageState extends State<HomePage> {
   final int genresPerPage = 5;
 
   // Favorites
+  Set<String> favoriteBookIds = {};
   Set<String> _favoriteBookIds = {};
+  Set<String> _savedBookIds = {};
   late Future<void> _initData;
 
   Future<UserProfile> _fetchUserProfile() {
@@ -67,20 +69,18 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  Set<String> favoriteBookIds = {};
-
-  // Future<void> _loadFavoriteBookIds() async {
-  //   try {
-  //     final favorites = await UserApiService.getFavorites();
-  //     setState(() {
-  //       favoriteBookIds = favorites
-  //           .map<String>((item) => item['bookId'] as String)
-  //           .toSet();
-  //     });
-  //   } catch (e) {
-  //     debugPrint('Error loading favorite IDs: $e');
-  //   }
-  // }
+  void _loadSavedBookIds() async {
+    try {
+      final saved = await UserApiService.getSaved();
+      setState(() {
+        _savedBookIds = saved
+            .map<String>((item) => item['bookId'] as String)
+            .toSet();
+      });
+    } catch (e) {
+      debugPrint('Error loading saved books: $e');
+    }
+  }
 
   void _performSearch(String query) {
     if (query.trim().isEmpty) {
@@ -114,6 +114,7 @@ class _HomePageState extends State<HomePage> {
           setState(() {});
         },
         onFavoritesChanged: _refreshFavorites,
+        onSavedChanged: _loadSavedBookIds,
       ),
 
       body: FutureBuilder<void>(
@@ -174,7 +175,9 @@ class _HomePageState extends State<HomePage> {
                               return BookCard(
                                 book: book,
                                 isFavorite: _favoriteBookIds.contains(book.id),
+                                isSaved: _savedBookIds.contains(book.id),
                                 onFavoriteToggled: _refreshFavorites,
+                                onSavedToggled: _loadSavedBookIds,
                               );
                             },
                           );
