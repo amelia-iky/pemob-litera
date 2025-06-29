@@ -60,27 +60,29 @@ lib/
 <h2>🖥️ Documentation</h2>
 
 <!-- Main Pages -->
-<table>
-  <tr>
-    <td colspan="4" align="center"><b>Main Pages</b></td>
-  </tr>
-  <tr>
-    <td align="center"><b>Home</b></td>
-    <td align="center"><b>Drawer</b></td>
-    <td align="center"><b>Search</b></td>
-  </tr>
-  <tr>
-    <td align="center">
-      <img src="/assets/documentation/home-pages.jpg" alt="home-pages" height="450" width="225"/>
-    </td>
-    <td align="center">
-      <img src='/assets/documentation/drawer-pages.jpg' alt="drawer-pages" height="450" width="225"/>
-    </td>
-    <td align="center">
-      <img src='/assets/documentation/book-search.jpg' alt="search-pages" height="450" width="225"/>
-    </td>
-  </tr>
-</table>
+<div align="center">
+  <table>
+    <tr>
+      <td colspan="4" align="center"><b>Main Pages</b></td>
+    </tr>
+    <tr>
+      <td align="center"><b>Home</b></td>
+      <td align="center"><b>Drawer</b></td>
+      <td align="center"><b>Search</b></td>
+    </tr>
+    <tr>
+      <td align="center">
+        <img src="/assets/documentation/home-pages.jpg" alt="home-pages" height="450" width="225"/>
+      </td>
+      <td align="center">
+        <img src='/assets/documentation/drawer-pages.jpg' alt="drawer-pages" height="450" width="225"/>
+      </td>
+      <td align="center">
+        <img src='/assets/documentation/book-search.jpg' alt="search-pages" height="450" width="225"/>
+      </td>
+    </tr>
+  </table>
+</div>
 
 <!-- Book Pages -->
 <table>
