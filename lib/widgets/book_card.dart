@@ -6,13 +6,17 @@ import '../services/user_api_service.dart';
 class BookCard extends StatefulWidget {
   final Book book;
   final bool isFavorite;
+  final bool isSaved;
   final VoidCallback? onFavoriteToggled;
+  final VoidCallback? onSavedToggled;
 
   const BookCard({
     super.key,
     required this.book,
     this.isFavorite = false,
+    this.isSaved = false,
     this.onFavoriteToggled,
+    this.onSavedToggled,
   });
 
   @override
@@ -21,30 +25,27 @@ class BookCard extends StatefulWidget {
 
 class _BookCardState extends State<BookCard> {
   late bool isFavorited;
+  late bool isSaved;
   String? favoriteId;
-  bool isSaved = false;
+  String? savedId;
 
   @override
   void initState() {
     super.initState();
     isFavorited = widget.isFavorite;
+    isSaved = widget.isSaved;
   }
 
   Future<void> _toggleFavorite() async {
     try {
       if (isFavorited) {
-        if (favoriteId != null) {
-          await UserApiService.deleteFavorite(favoriteId!);
-        } else {
-          // Fallback: cari berdasarkan bookId kalau memang belum ada favoriteId
-          final favorites = await UserApiService.getFavorites();
-          final match = favorites.firstWhere(
-            (item) => item['bookId'] == widget.book.id,
-            orElse: () => null,
-          );
-          if (match != null) {
-            await UserApiService.deleteFavorite(match['id']);
-          }
+        final favorites = await UserApiService.getFavorites();
+        final match = favorites.firstWhere(
+          (item) => item['bookId'] == widget.book.id,
+          orElse: () => null,
+        );
+        if (match != null) {
+          await UserApiService.deleteFavorite(match['id']);
         }
 
         setState(() {
@@ -65,10 +66,7 @@ class _BookCardState extends State<BookCard> {
         });
       }
 
-      // Notifikasi ke parent (HomePage) untuk refresh favorites
-      if (widget.onFavoriteToggled != null) {
-        widget.onFavoriteToggled!();
-      }
+      widget.onFavoriteToggled?.call();
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -81,6 +79,48 @@ class _BookCardState extends State<BookCard> {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text('Failed to toggle favorite: $e')));
+    }
+  }
+
+  Future<void> _toggleSaved() async {
+    try {
+      if (isSaved) {
+        final saved = await UserApiService.getSaved();
+        final match = saved.firstWhere(
+          (item) => item['bookId'] == widget.book.id,
+          orElse: () => null,
+        );
+        if (match != null) {
+          await UserApiService.deleteSaved(match['id']);
+        }
+
+        setState(() {
+          isSaved = false;
+          savedId = null;
+        });
+      } else {
+        final id = await UserApiService.addSaved(
+          bookId: widget.book.id,
+          title: widget.book.title,
+          author: widget.book.author,
+          price: widget.book.price,
+          coverImage: widget.book.coverImage,
+        );
+        setState(() {
+          isSaved = true;
+          savedId = id;
+        });
+      }
+
+      widget.onSavedToggled?.call();
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(isSaved ? 'Book saved' : 'Save removed')),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Failed to toggle saved: $e')));
     }
   }
 
@@ -175,16 +215,7 @@ class _BookCardState extends State<BookCard> {
                   ),
                   const SizedBox(width: 8),
                   GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        isSaved = !isSaved;
-                      });
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(isSaved ? 'Disimpan' : 'Dibatalkan'),
-                        ),
-                      );
-                    },
+                    onTap: _toggleSaved,
                     child: Icon(
                       isSaved ? Icons.bookmark : Icons.bookmark_border,
                       color: isSaved ? Colors.amber : Colors.grey,
