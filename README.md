@@ -134,6 +134,31 @@ lib/
   </table>
 </div>
 
+<!-- Authentication -->
+<div align="center">
+  <table>
+    <tr>
+      <td colspan="2" align="center"><b>Authentication</b></td>
+    </tr>
+    <tr>
+      <td align="center"><b>Sign Up</b></td>
+      <td align="center"><b>Sign In</b></td>
+      <!-- <td align="center"><b>Crop Images</b></td> -->
+    </tr>
+    <tr>
+      <td align="center">
+        <img src="/assets/documentation/signup-pages.jpg" alt="signup-pages" height="450" width="225"/>
+      </td>
+      <td align="center">
+        <img src="/assets/documentation/signin-pages.jpg" alt="signin-pages" height="450" width="225"/>
+      </td>
+      <!-- <td align="center">
+        <img src="/assets/documentation/profile-crop-images.jpg" alt="edit-profile-pages" height="450" width="225"/>
+      </td> -->
+    </tr>
+  </table>
+</div>
+
 <p align="center">
   🔗 <b>Download:</b> <a href='https://go.undiksha.ac.id/Litera'>https://go.undiksha.ac.id/Litera</a>
 </p>
