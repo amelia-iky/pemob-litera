@@ -40,7 +40,7 @@ lib/
   <li>✅ Reset Password</li>
   <li>✅ Mark Books as Favorite</li>
   <li>✅ Save Books to Personal Collection</li>
-  <li>✅ Checkout Books with <a href="https://www.gramedia.com/"><strong>Gramedia</strong></a> Integration</li>
+  <li>✅ Checkout Books with <a href="https://www.gramedia.com/", style="color: black; text-decoration: none;"><strong>Gramedia</strong></a> Integration</li>
 </ul>
 
 <hr/>
@@ -54,10 +54,10 @@ lib/
   </tr>
   <tr>
     <td align="center">
-      <img src="/public/landing-pages.png" alt="home-pages" width="400"/>
+      <img src='' alt="home-pages" width="400"/>
     </td>
     <td align="center">
-      <img src="/public/pagination.png" alt="profile-pages" width="400"/>
+      <img src='' alt="profile-pages" width="400"/>
     </td>
   </tr>
 </table>
@@ -69,10 +69,10 @@ lib/
   </tr>
   <tr>
     <td align="center">
-      <img src="/public/form-view.png" alt="favorite-pages" width="400"/>
+      <img src='' alt="favorite-pages" width="400"/>
     </td>
     <td align="center">
-      <img src="/public/confirmation-button.png" alt="saved-pages" width="400"/>
+      <img src='' alt="saved-pages" width="400"/>
     </td>
   </tr>
 </table>
@@ -84,16 +84,16 @@ lib/
   </tr>
   <tr>
     <td align="center">
-      <img src="/public/search-bar.png" alt="detail-pages" width="400"/>
+      <img src='' alt="detail-pages" width="400"/>
     </td>
     <td align="center">
-      <img src="/public/null-search.png" alt="search-pages" width="400"/>
+      <img src='' alt="search-pages" width="400"/>
     </td>
   </tr>
 </table>
 
 <p align="center">
-  🔗 <b>Download:</b> <a href="https://go.undiksha.ac.id/Litera" target="_blank">https://go.undiksha.ac.id/Litera</a>
+  🔗 <b>Download:</b> <a href='https://go.undiksha.ac.id/Litera' target="_blank">https://go.undiksha.ac.id/Litera</a>
 </p>
 
 <hr/>
