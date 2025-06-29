@@ -85,50 +85,54 @@ lib/
 </div>
 
 <!-- Book Pages -->
-<table>
-  <tr>
-    <td colspan="3" align="center"><b>Book Pages</b></td>
-  </tr>
-  <tr>
-    <td align="center"><b>Detail</b></td>
-    <td align="center"><b>Favorite</b></td>
-    <td align="center"><b>Saved</b></td>
-  </tr>
-  <tr>
-    <td align="center">
-      <img src='/assets/documentation/book-detail.jpg' alt="detail-pages" height="450" width="225"/>
-    </td>
-    <td align="center">
-      <img src="/assets/documentation/book-favorite.jpg" alt="edit-profile-pages" height="450" width="225"/>
-    </td>
-    <td align="center">
-      <img src="/assets/documentation/book-saved.jpg" alt="edit-profile-pages" height="450" width="225"/>
-    </td>
-  </tr>
-</table>
+<div align="center">
+  <table>
+    <tr>
+      <td colspan="3" align="center"><b>Book Pages</b></td>
+    </tr>
+    <tr>
+      <td align="center"><b>Detail</b></td>
+      <td align="center"><b>Favorite</b></td>
+      <td align="center"><b>Saved</b></td>
+    </tr>
+    <tr>
+      <td align="center">
+        <img src='/assets/documentation/book-detail.jpg' alt="detail-pages" height="450" width="225"/>
+      </td>
+      <td align="center">
+        <img src="/assets/documentation/book-favorite.jpg" alt="edit-profile-pages" height="450" width="225"/>
+      </td>
+      <td align="center">
+        <img src="/assets/documentation/book-saved.jpg" alt="edit-profile-pages" height="450" width="225"/>
+      </td>
+    </tr>
+  </table>
+</div>
 
 <!-- User Dashboard -->
-<table>
-  <tr>
-    <td colspan="3" align="center"><b>User Dashboard</b></td>
-  </tr>
-  <tr>
-    <td align="center"><b>Profile</b></td>
-    <td align="center"><b>Edit</b></td>
-    <td align="center"><b>Crop Images</b></td>
-  </tr>
-  <tr>
-    <td align="center">
-      <img src="/assets/documentation/profile-pages.jpg" alt="profile-pages" height="450" width="225"/>
-    </td>
-    <td align="center">
-      <img src="/assets/documentation/profile-edit.jpg" alt="edit-profile-pages" height="450" width="225"/>
-    </td>
-    <td align="center">
-      <img src="/assets/documentation/profile-crop-images.jpg" alt="edit-profile-pages" height="450" width="225"/>
-    </td>
-  </tr>
-</table>
+<div align="center">
+  <table>
+    <tr>
+      <td colspan="3" align="center"><b>User Dashboard</b></td>
+    </tr>
+    <tr>
+      <td align="center"><b>Profile</b></td>
+      <td align="center"><b>Edit</b></td>
+      <td align="center"><b>Crop Images</b></td>
+    </tr>
+    <tr>
+      <td align="center">
+        <img src="/assets/documentation/profile-pages.jpg" alt="profile-pages" height="450" width="225"/>
+      </td>
+      <td align="center">
+        <img src="/assets/documentation/profile-edit.jpg" alt="edit-profile-pages" height="450" width="225"/>
+      </td>
+      <td align="center">
+        <img src="/assets/documentation/profile-crop-images.jpg" alt="edit-profile-pages" height="450" width="225"/>
+      </td>
+    </tr>
+  </table>
+</div>
 
 <p align="center">
   🔗 <b>Download:</b> <a href='https://go.undiksha.ac.id/Litera'>https://go.undiksha.ac.id/Litera</a>
