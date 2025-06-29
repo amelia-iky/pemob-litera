@@ -34,7 +34,7 @@
 <pre>
 lib/
 │
-├── models/     # Data models for objects like book_models, genre_models, user_models, etc.
+├── models/     # Data models for objects (e.g. book_models, genre_models, user_models, etc.)
 ├── pages/      # Full screen pages (e.g. home_pages, login_pages, proile_pages, etc.)
 ├── services/   # API service classes and functions (e.g. auth_api_service, book_api_service, user_api_service, etc.)
 ├── widgets/    # Reusable UI components (e.g. book_card, book_category, profile_form, etc.)
