@@ -9,10 +9,22 @@
 <h2>🚀 Tech Stack</h2>
 
 <ul style="list-style: none; padding-left: 0; color: black;">
-  <li>📱 <a href="https://flutter.dev/">Flutter</a> - Mobile Framework</li>
-  <li>🚀 <a href="https://expressjs.com/">ExpressJS</a> - Backend Framework</li>
-  <li>🍃 <a href="https://www.mongodb.com/">MongoDB</a> - Database</li>
-  <li>📚 <a href="https://bukuacak.vercel.app/api">Buku Acak</a> - Open API</li>
+  <li>
+    <img src="https://img.icons8.com/?size=100&id=7I3BjCqe9rjG&format=png&color=000000" alt="flutter-icon" style="height: 22px; vertical-align: middle;">
+    <a href="https://flutter.dev/">Flutter</a> - Mobile Framework
+  </li>
+  <li>
+    <img src="https://img.icons8.com/?size=100&id=108784&format=png&color=000000" alt="mongodb-icon" style="height: 22px; vertical-align: middle;">
+    <a href="https://expressjs.com/">ExpressJS</a> - Backend Framework
+  <li>
+  <li>
+    <img src="https://img.icons8.com/?size=100&id=8rKdRqZFLurS&format=png&color=000000" alt="mongodb-icon" style="height: 22px; vertical-align: middle;">
+    <a href="https://www.mongodb.com/">MongoDB</a> - Database
+  </li>
+  <li>
+    <img src="https://img.icons8.com/?size=100&id=l6iocFkbmCrh&format=png&color=000000" alt="mongodb-icon" style="height: 22px; vertical-align: middle;">
+    <a href="https://bukuacak.vercel.app/api">Buku Acak</a> - Open API
+  </li>
 </ul>
 
 <hr/>
