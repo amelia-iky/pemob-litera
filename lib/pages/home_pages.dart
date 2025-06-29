@@ -23,11 +23,9 @@ class _HomePageState extends State<HomePage> {
   Future<List<Book>>? _searchResults;
   bool _isSearching = false;
 
-  // Pagination
   int currentPage = 0;
   final int genresPerPage = 5;
 
-  // Favorites
   Set<String> favoriteBookIds = {};
   Set<String> _favoriteBookIds = {};
   Set<String> _savedBookIds = {};
@@ -97,6 +95,17 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  // ✅ Tambahan: Fungsi refresh saat pull
+  Future<void> _refreshAllData() async {
+    setState(() {
+      _initData = _fetchInitialData();
+      _searchResults = null;
+      _isSearching = false;
+      _searchController.clear();
+    });
+    await _initData;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -116,7 +125,6 @@ class _HomePageState extends State<HomePage> {
         onFavoritesChanged: _refreshFavorites,
         onSavedChanged: _loadSavedBookIds,
       ),
-
       body: FutureBuilder<void>(
         future: _initData,
         builder: (context, snapshot) {
@@ -126,105 +134,110 @@ class _HomePageState extends State<HomePage> {
             return Center(child: Text('Error loading data: ${snapshot.error}'));
           }
 
-          return Column(
-            children: [
-              // Search Bar
-              BookSearch(
-                controller: _searchController,
-                onSearch: _performSearch,
-                onClear: () {
-                  _searchController.clear();
-                  _performSearch('');
-                },
-              ),
-              Expanded(
-                child: _isSearching && _searchResults != null
-                    ? FutureBuilder<List<Book>>(
-                        future: _searchResults,
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return const Center(
-                              child: CircularProgressIndicator(),
-                            );
-                          } else if (snapshot.hasError) {
-                            return Center(
-                              child: Text('Error: ${snapshot.error}'),
-                            );
-                          } else if (!snapshot.hasData ||
-                              snapshot.data!.isEmpty) {
-                            return const Center(child: Text('No books found.'));
-                          }
-
-                          final books = snapshot.data!
-                              .where((b) => b.coverImage.isNotEmpty)
-                              .toList();
-
-                          return GridView.builder(
-                            padding: const EdgeInsets.all(8),
-                            gridDelegate:
-                                const SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 2,
-                                  childAspectRatio: 0.6,
-                                  crossAxisSpacing: 8,
-                                  mainAxisSpacing: 8,
-                                ),
-                            itemCount: books.length,
-                            itemBuilder: (context, i) {
-                              final book = books[i];
-                              return BookCard(
-                                book: book,
-                                isFavorite: _favoriteBookIds.contains(book.id),
-                                isSaved: _savedBookIds.contains(book.id),
-                                onFavoriteToggled: _refreshFavorites,
-                                onSavedToggled: _loadSavedBookIds,
+          return RefreshIndicator(
+            onRefresh: _refreshAllData, // ✅ Tambahan di sini
+            child: Column(
+              children: [
+                BookSearch(
+                  controller: _searchController,
+                  onSearch: _performSearch,
+                  onClear: () {
+                    _searchController.clear();
+                    _performSearch('');
+                  },
+                ),
+                Expanded(
+                  child: _isSearching && _searchResults != null
+                      ? FutureBuilder<List<Book>>(
+                          future: _searchResults,
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return const Center(
+                                child: CircularProgressIndicator(),
                               );
-                            },
-                          );
-                        },
-                      )
-                    : FutureBuilder<List<GenreStat>>(
-                        future: _genreFuture,
-                        builder: (context, genreSnapshot) {
-                          if (genreSnapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return const Center(
-                              child: CircularProgressIndicator(),
-                            );
-                          } else if (genreSnapshot.hasError) {
-                            return Center(
-                              child: Text('Error: ${genreSnapshot.error}'),
-                            );
-                          } else if (!genreSnapshot.hasData ||
-                              genreSnapshot.data!.isEmpty) {
-                            return const Center(
-                              child: Text('No genres found.'),
-                            );
-                          }
+                            } else if (snapshot.hasError) {
+                              return Center(
+                                child: Text('Error: ${snapshot.error}'),
+                              );
+                            } else if (!snapshot.hasData ||
+                                snapshot.data!.isEmpty) {
+                              return const Center(
+                                child: Text('No books found.'),
+                              );
+                            }
 
-                          final genres = genreSnapshot.data!;
-                          final totalPages = (genres.length / genresPerPage)
-                              .ceil();
-                          final pagedGenres = genres
-                              .skip(currentPage * genresPerPage)
-                              .take(genresPerPage)
-                              .toList();
+                            final books = snapshot.data!
+                                .where((b) => b.coverImage.isNotEmpty)
+                                .toList();
 
-                          // Book Category
-                          return BookCategory(
-                            pagedGenres: pagedGenres,
-                            currentPage: currentPage,
-                            totalPages: totalPages,
-                            onPrevPage: () => setState(() => currentPage--),
-                            onNextPage: () => setState(() => currentPage++),
-                            bookFutures: _bookFutures,
-                            favoriteBookIds: _favoriteBookIds,
-                            onFavoriteToggled: _refreshFavorites,
-                          );
-                        },
-                      ),
-              ),
-            ],
+                            return GridView.builder(
+                              padding: const EdgeInsets.all(8),
+                              gridDelegate:
+                                  const SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 2,
+                                    childAspectRatio: 0.6,
+                                    crossAxisSpacing: 8,
+                                    mainAxisSpacing: 8,
+                                  ),
+                              itemCount: books.length,
+                              itemBuilder: (context, i) {
+                                final book = books[i];
+                                return BookCard(
+                                  book: book,
+                                  isFavorite: _favoriteBookIds.contains(
+                                    book.id,
+                                  ),
+                                  isSaved: _savedBookIds.contains(book.id),
+                                  onFavoriteToggled: _refreshFavorites,
+                                  onSavedToggled: _loadSavedBookIds,
+                                );
+                              },
+                            );
+                          },
+                        )
+                      : FutureBuilder<List<GenreStat>>(
+                          future: _genreFuture,
+                          builder: (context, genreSnapshot) {
+                            if (genreSnapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return const Center(
+                                child: CircularProgressIndicator(),
+                              );
+                            } else if (genreSnapshot.hasError) {
+                              return Center(
+                                child: Text('Error: ${genreSnapshot.error}'),
+                              );
+                            } else if (!genreSnapshot.hasData ||
+                                genreSnapshot.data!.isEmpty) {
+                              return const Center(
+                                child: Text('No genres found.'),
+                              );
+                            }
+
+                            final genres = genreSnapshot.data!;
+                            final totalPages = (genres.length / genresPerPage)
+                                .ceil();
+                            final pagedGenres = genres
+                                .skip(currentPage * genresPerPage)
+                                .take(genresPerPage)
+                                .toList();
+
+                            return BookCategory(
+                              pagedGenres: pagedGenres,
+                              currentPage: currentPage,
+                              totalPages: totalPages,
+                              onPrevPage: () => setState(() => currentPage--),
+                              onNextPage: () => setState(() => currentPage++),
+                              bookFutures: _bookFutures,
+                              favoriteBookIds: _favoriteBookIds,
+                              onFavoriteToggled: _refreshFavorites,
+                            );
+                          },
+                        ),
+                ),
+              ],
+            ),
           );
         },
       ),
