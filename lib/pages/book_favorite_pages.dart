@@ -3,7 +3,8 @@ import '../services/user_api_service.dart';
 import '../pages/book_detail_pages.dart';
 
 class FavoritePage extends StatefulWidget {
-  const FavoritePage({super.key});
+  final VoidCallback? onFavoritesChanged;
+  const FavoritePage({super.key, this.onFavoritesChanged});
 
   @override
   State<FavoritePage> createState() => _FavoritePageState();
@@ -41,6 +42,8 @@ class _FavoritePageState extends State<FavoritePage> {
       setState(() {
         _favorites.removeWhere((item) => item['id'] == favoriteId);
       });
+
+      widget.onFavoritesChanged?.call();
 
       ScaffoldMessenger.of(
         context,
