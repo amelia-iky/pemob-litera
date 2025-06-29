@@ -18,11 +18,11 @@
     <a href="https://expressjs.com/">ExpressJS</a> - Backend Framework
   <li>
   <li>
-    <img src="https://img.icons8.com/?size=100&id=8rKdRqZFLurS&format=png&color=000000" alt="mongodb-icon" style="height: 22px; vertical-align: middle;">
+    <img src="https://img.icons8.com/?size=100&id=8rKdRqZFLurS&format=png&color=000000" alt="javascript-icon" style="height: 22px; vertical-align: middle;">
     <a href="https://www.mongodb.com/">MongoDB</a> - Database
   </li>
   <li>
-    <img src="https://img.icons8.com/?size=100&id=l6iocFkbmCrh&format=png&color=000000" alt="mongodb-icon" style="height: 22px; vertical-align: middle;">
+    <img src="https://img.icons8.com/?size=100&id=l6iocFkbmCrh&format=png&color=000000" alt="book-icon" style="height: 22px; vertical-align: middle;">
     <a href="https://bukuacak.vercel.app/api">Buku Acak</a> - Open API
   </li>
 </ul>
