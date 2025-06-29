@@ -1,18 +1,21 @@
 import 'package:flutter/material.dart';
-import '../pages/book_favorite_pages.dart';
 import '../models/user_models.dart';
+import '../pages/book_favorite_pages.dart';
+import '../pages/book_saved_pages.dart';
 import '../pages/profile_pages.dart';
 
 class CustomDrawer extends StatelessWidget {
   final Future<UserProfile> Function() fetchUserProfile;
   final VoidCallback onProfileUpdated;
   final VoidCallback onFavoritesChanged;
+  final VoidCallback onSavedChanged;
 
   const CustomDrawer({
     super.key,
     required this.fetchUserProfile,
     required this.onProfileUpdated,
     required this.onFavoritesChanged,
+    required this.onSavedChanged,
   });
 
   @override
@@ -151,9 +154,19 @@ class CustomDrawer extends StatelessWidget {
                     );
                   },
                 ),
-                const ListTile(
-                  leading: Icon(Icons.bookmark),
-                  title: Text('Saved'),
+                ListTile(
+                  leading: const Icon(Icons.bookmark),
+                  title: const Text('Saved'),
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) =>
+                            SavedPage(onSavedChanged: onSavedChanged),
+                      ),
+                    );
+                  },
                 ),
               ],
             ),
