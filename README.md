@@ -66,10 +66,10 @@ lib/
   </tr>
   <tr>
     <td align="center">
-      <img src='' alt="home-pages" width="400"/>
+      <img src='/assets/documentation/home-pages.jpg' alt="home-pages" width="400"/>
     </td>
     <td align="center">
-      <img src='' alt="profile-pages" width="400"/>
+      <img src='/assets/documentation/profile-pages.jpg' alt="profile-pages" width="400"/>
     </td>
   </tr>
 </table>
