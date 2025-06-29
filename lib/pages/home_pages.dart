@@ -67,6 +67,21 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  Set<String> favoriteBookIds = {};
+
+  // Future<void> _loadFavoriteBookIds() async {
+  //   try {
+  //     final favorites = await UserApiService.getFavorites();
+  //     setState(() {
+  //       favoriteBookIds = favorites
+  //           .map<String>((item) => item['bookId'] as String)
+  //           .toSet();
+  //     });
+  //   } catch (e) {
+  //     debugPrint('Error loading favorite IDs: $e');
+  //   }
+  // }
+
   void _performSearch(String query) {
     if (query.trim().isEmpty) {
       setState(() {
@@ -98,7 +113,9 @@ class _HomePageState extends State<HomePage> {
         onProfileUpdated: () {
           setState(() {});
         },
+        onFavoritesChanged: _refreshFavorites,
       ),
+
       body: FutureBuilder<void>(
         future: _initData,
         builder: (context, snapshot) {
