@@ -8,7 +8,7 @@
 
 <h2>🚀 Tech Stack</h2>
 
-<ul style="list-style: none; padding-left: 0; color: black;">
+<ul style="list-style-type: none; padding-left: 0; color: black;">
   <li>
     <img src="https://img.icons8.com/?size=100&id=7I3BjCqe9rjG&format=png&color=000000" alt="flutter-icon" style="height: 22px; vertical-align: middle;">
     <a href="https://flutter.dev/">Flutter</a> - Mobile Framework
@@ -45,7 +45,7 @@ lib/
 
 <h2>🎯 Features</h2>
 
-<ul>
+<ul style='list-style-type: none;'>
   <li>✅ User Authentication (Login & Register)</li>
   <li>✅ Edit Profile & Change Password</li>
   <li>✅ Profile Photo Upload with Camera Integration</li>
