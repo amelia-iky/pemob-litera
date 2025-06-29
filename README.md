@@ -9,7 +9,7 @@
 <h2>🚀 Tech Stack</h2>
 
 <ul style="list-style: none; padding-left: 0; color: black;">
-  <li>📱 <a href="https://flutter.dev/" target="_blank" style="color: black; text-decoration: none;"><strong>Flutter</strong></a> - Mobile Framework</li>
+  <li>📱  <a href="https://flutter.dev/"style="color: black; text-decoration: none;">Flutter</a> - Mobile Framework</li>
   <li>🚀 <a href="https://expressjs.com/" target="_blank" style="color: black; text-decoration: none;"><strong>ExpressJS</strong></a> - Backend Framework</li>
   <li>🍃 <a href="https://www.mongodb.com/" target="_blank" style="color: black; text-decoration: none;"><strong>MongoDB</strong></a> - Database</li>
   <li>📚 <a href="https://bukuacak.vercel.app/api" target="_blank" style="color: black; text-decoration: none;"><strong>Buku Acak</strong></a> - Open API</li>
