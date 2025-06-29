@@ -46,7 +46,7 @@ lib/
 <h2>🎯 Features</h2>
 
 <ul style='list-style-type: none;'>
-  <li>✅ User Authentication (Login & Register)</li>
+  <li>✅ User Authentication (SignUp & SignIn)</li>
   <li>✅ Edit Profile & Change Password</li>
   <li>✅ Profile Photo Upload with Camera Integration</li>
   <li>✅ Reset Password</li>
@@ -59,39 +59,61 @@ lib/
 
 <h2>🖥️ Documentation</h2>
 
+<!-- Main Pages -->
 <table>
   <tr>
     <td colspan="4" align="center"><b>Main Pages</b></td>
   </tr>
   <tr>
     <td align="center"><b>Home</b></td>
-    <td align="center"><b>Book Detail</b></td>
-    <td align="center"><b>Book Search</b></td>
     <td align="center"><b>Drawer</b></td>
+    <td align="center"><b>Search</b></td>
   </tr>
   <tr>
     <td align="center">
       <img src="/assets/documentation/home-pages.jpg" alt="home-pages" height="300" width="150"/>
     </td>
     <td align="center">
-      <img src='/assets/documentation/book-detail.jpg' alt="detail-pages" height="300" width="150"/>
-    </td>
-    <td align="center">
-      <img src='' alt="search-pages" height="300" width="150"/>
-    </td>
-    <td align="center">
       <img src='/assets/documentation/drawer-pages.jpg' alt="drawer-pages" height="300" width="150"/>
+    </td>
+    <td align="center">
+      <img src='/assets/documentation/book-search.jpg' alt="search-pages" height="300" width="150"/>
     </td>
   </tr>
 </table>
 
+<!-- Book Pages -->
 <table>
   <tr>
-    <td colspan="2" align="center"><b>User Dashboard</b></td>
+    <td colspan="3" align="center"><b>Book Pages</b></td>
+  </tr>
+  <tr>
+    <td align="center"><b>Detail</b></td>
+    <td align="center"><b>Favorite</b></td>
+    <td align="center"><b>Saved</b></td>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src='/assets/documentation/book-detail.jpg' alt="detail-pages" height="300" width="150"/>
+    </td>
+    <td align="center">
+      <img src="/assets/documentation/book-favorite.jpg" alt="edit-profile-pages" height="300" width="150"/>
+    </td>
+    <td align="center">
+      <img src="/assets/documentation/book-saved.jpg" alt="edit-profile-pages" height="300" width="150"/>
+    </td>
+  </tr>
+</table>
+
+<!-- User Dashboard -->
+<table>
+  <tr>
+    <td colspan="3" align="center"><b>User Dashboard</b></td>
   </tr>
   <tr>
     <td align="center"><b>Profile</b></td>
-    <td align="center"><b>Edit Profile</b></td>
+    <td align="center"><b>Edit</b></td>
+    <td align="center"><b>Crop Images</b></td>
   </tr>
   <tr>
     <td align="center">
@@ -99,6 +121,9 @@ lib/
     </td>
     <td align="center">
       <img src="/assets/documentation/profile-edit.jpg" alt="edit-profile-pages" height="300" width="150"/>
+    </td>
+    <td align="center">
+      <img src="/assets/documentation/profile-crop-images.jpg" alt="edit-profile-pages" height="300" width="150"/>
     </td>
   </tr>
 </table>
