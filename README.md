@@ -71,13 +71,13 @@ lib/
   </tr>
   <tr>
     <td align="center">
-      <img src="/assets/documentation/home-pages.jpg" alt="home-pages" height="300" width="150"/>
+      <img src="/assets/documentation/home-pages.jpg" alt="home-pages" height="500" width="250"/>
     </td>
     <td align="center">
-      <img src='/assets/documentation/drawer-pages.jpg' alt="drawer-pages" height="300" width="150"/>
+      <img src='/assets/documentation/drawer-pages.jpg' alt="drawer-pages" height="500" width="250"/>
     </td>
     <td align="center">
-      <img src='/assets/documentation/book-search.jpg' alt="search-pages" height="300" width="150"/>
+      <img src='/assets/documentation/book-search.jpg' alt="search-pages" height="500" width="250"/>
     </td>
   </tr>
 </table>
@@ -94,13 +94,13 @@ lib/
   </tr>
   <tr>
     <td align="center">
-      <img src='/assets/documentation/book-detail.jpg' alt="detail-pages" height="300" width="150"/>
+      <img src='/assets/documentation/book-detail.jpg' alt="detail-pages" height="500" width="250"/>
     </td>
     <td align="center">
-      <img src="/assets/documentation/book-favorite.jpg" alt="edit-profile-pages" height="300" width="150"/>
+      <img src="/assets/documentation/book-favorite.jpg" alt="edit-profile-pages" height="500" width="250"/>
     </td>
     <td align="center">
-      <img src="/assets/documentation/book-saved.jpg" alt="edit-profile-pages" height="300" width="150"/>
+      <img src="/assets/documentation/book-saved.jpg" alt="edit-profile-pages" height="500" width="250"/>
     </td>
   </tr>
 </table>
@@ -117,13 +117,13 @@ lib/
   </tr>
   <tr>
     <td align="center">
-      <img src="/assets/documentation/profile-pages.jpg" alt="profile-pages" height="300" width="150"/>
+      <img src="/assets/documentation/profile-pages.jpg" alt="profile-pages" height="500" width="250"/>
     </td>
     <td align="center">
-      <img src="/assets/documentation/profile-edit.jpg" alt="edit-profile-pages" height="300" width="150"/>
+      <img src="/assets/documentation/profile-edit.jpg" alt="edit-profile-pages" height="500" width="250"/>
     </td>
     <td align="center">
-      <img src="/assets/documentation/profile-crop-images.jpg" alt="edit-profile-pages" height="300" width="150"/>
+      <img src="/assets/documentation/profile-crop-images.jpg" alt="edit-profile-pages" height="500" width="250"/>
     </td>
   </tr>
 </table>
