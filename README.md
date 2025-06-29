@@ -9,10 +9,10 @@
 <h2>🚀 Tech Stack</h2>
 
 <ul style="list-style: none; padding-left: 0; color: black;">
-  <li>📱  <a href="https://flutter.dev/"style="color: black; text-decoration: none;">Flutter</a> - Mobile Framework</li>
-  <li>🚀 <a href="https://expressjs.com/" target="_blank" style="color: black; text-decoration: none;"><strong>ExpressJS</strong></a> - Backend Framework</li>
-  <li>🍃 <a href="https://www.mongodb.com/" target="_blank" style="color: black; text-decoration: none;"><strong>MongoDB</strong></a> - Database</li>
-  <li>📚 <a href="https://bukuacak.vercel.app/api" target="_blank" style="color: black; text-decoration: none;"><strong>Buku Acak</strong></a> - Open API</li>
+  <li>📱 <a href="https://flutter.dev/">Flutter</a> - Mobile Framework</li>
+  <li>🚀 <a href="https://expressjs.com/">ExpressJS</a> - Backend Framework</li>
+  <li>🍃 <a href="https://www.mongodb.com/">MongoDB</a> - Database</li>
+  <li>📚 <a href="https://bukuacak.vercel.app/api">Buku Acak</a> - Open API</li>
 </ul>
 
 <hr/>
@@ -40,7 +40,7 @@ lib/
   <li>✅ Reset Password</li>
   <li>✅ Mark Books as Favorite</li>
   <li>✅ Save Books to Personal Collection</li>
-  <li>✅ Checkout Books with <a href="https://www.gramedia.com/", style="color: black; text-decoration: none;"><strong>Gramedia</strong></a> Integration</li>
+  <li>✅ Checkout Books with <a href="https://www.gramedia.com/">Gramedia</a> Integration</li>
 </ul>
 
 <hr/>
@@ -93,7 +93,7 @@ lib/
 </table>
 
 <p align="center">
-  🔗 <b>Download:</b> <a href='https://go.undiksha.ac.id/Litera' target="_blank">https://go.undiksha.ac.id/Litera</a>
+  🔗 <b>Download:</b> <a href='https://go.undiksha.ac.id/Litera'>https://go.undiksha.ac.id/Litera</a>
 </p>
 
 <hr/>
