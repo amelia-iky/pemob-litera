@@ -71,16 +71,16 @@ lib/
   </tr>
   <tr>
     <td align="center">
-      <img src="/assets/documentation/home-pages.jpg" alt="home-pages" height="200" width="100"/>
+      <img src="/assets/documentation/home-pages.jpg" alt="home-pages" height="400" width="200"/>
     </td>
     <td align="center">
-      <img src='/assets/documentation/book-detail.jpg' alt="detail-pages" height="200" width="100"/>
+      <img src='/assets/documentation/book-detail.jpg' alt="detail-pages" height="400" width="200"/>
     </td>
     <td align="center">
-      <img src='' alt="search-pages" height="200" width="100"/>
+      <img src='' alt="search-pages" height="400" width="200"/>
     </td>
     <td align="center">
-      <img src='/assets/documentation/drawer-pages.jpg' alt="drawer-pages" height="200" width="100"/>
+      <img src='/assets/documentation/drawer-pages.jpg' alt="drawer-pages" height="400" width="200"/>
     </td>
   </tr>
 </table>
@@ -95,10 +95,10 @@ lib/
   </tr>
   <tr>
     <td align="center">
-      <img src="/assets/documentation/profile-pages.jpg" alt="profile-pages" height="200" width="100"/>
+      <img src="/assets/documentation/profile-pages.jpg" alt="profile-pages" height="400" width="200"/>
     </td>
     <td align="center">
-      <img src="/assets/documentation/profile-edit.jpg" alt="edit-profile-pages" height="200" width="100"/>
+      <img src="/assets/documentation/profile-edit.jpg" alt="edit-profile-pages" height="400" width="200"/>
     </td>
   </tr>
 </table>
