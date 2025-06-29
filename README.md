@@ -16,7 +16,7 @@
   <li>
     <img src="https://img.icons8.com/?size=100&id=108784&format=png&color=000000" alt="mongodb-icon" style="height: 22px; vertical-align: middle;">
     <a href="https://expressjs.com/">ExpressJS</a> - Backend Framework
-  <li>
+  </li>
   <li>
     <img src="https://img.icons8.com/?size=100&id=8rKdRqZFLurS&format=png&color=000000" alt="javascript-icon" style="height: 22px; vertical-align: middle;">
     <a href="https://www.mongodb.com/">MongoDB</a> - Database
