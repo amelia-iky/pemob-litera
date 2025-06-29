@@ -6,11 +6,13 @@ import '../pages/profile_pages.dart';
 class CustomDrawer extends StatelessWidget {
   final Future<UserProfile> Function() fetchUserProfile;
   final VoidCallback onProfileUpdated;
+  final VoidCallback onFavoritesChanged;
 
   const CustomDrawer({
     super.key,
     required this.fetchUserProfile,
     required this.onProfileUpdated,
+    required this.onFavoritesChanged,
   });
 
   @override
@@ -138,10 +140,14 @@ class CustomDrawer extends StatelessWidget {
                   leading: const Icon(Icons.favorite),
                   title: const Text('Favorite'),
                   onTap: () {
-                    Navigator.pop(context); // tutup drawer dulu
+                    Navigator.pop(context);
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (_) => const FavoritePage()),
+                      MaterialPageRoute(
+                        builder: (_) => FavoritePage(
+                          onFavoritesChanged: onFavoritesChanged,
+                        ),
+                      ),
                     );
                   },
                 ),
